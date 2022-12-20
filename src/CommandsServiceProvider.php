@@ -3,8 +3,8 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
-use Billing\Commands\InstallCommand;
-use Billing\Commands\HelpCommand;
+use Billing\Commands\Commands\InstallCommand;
+use Billing\Commands\Commands\HelpCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
