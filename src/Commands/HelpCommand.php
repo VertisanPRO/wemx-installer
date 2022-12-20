@@ -18,19 +18,12 @@ class HelpCommand extends Command
   private function help()
   {
     $help = '
-      Help:
-      php artisan billing:help - Help
-      php artisan billing:install stable {license key}(optional) - install stable version
-      php artisan billing:install dev {license key}(optional) - install dev version(no recommend!!!)
-      php artisan billing:uninstall - Removes the module and reinstalls the Pterodactyl panel
-      ';
-    return $this->infoNewLine($help);
-  }
-
-  private function infoNewLine($text)
-  {
-    $this->newLine();
-    $this->info($text);
-    $this->newLine();
+  Help:
+  php artisan billing:help - Help
+  php artisan billing:install stable {license key}(optional) - install stable version
+  php artisan billing:install dev {license key}(optional) - install dev version(no recommend!!!)
+  php artisan billing:uninstall - Removes the module and reinstalls the Pterodactyl panel
+  ';
+    return $this->info($help);
   }
 }

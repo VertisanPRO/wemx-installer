@@ -12,12 +12,11 @@ class InstallCommand extends Command
   protected $description = 'Installs the Billing Module for Pterodactyl';
   private $install = [];
 
-  private $url, $removeprotocols, $data;
+  private $url, $data;
 
   public function __construct()
   {
     parent::__construct();
-    $this->removeprotocols = array('http://', 'https://');
     $this->url = 'https://api.vertisanpro.com/billing';
     $this->data = [];
   }
