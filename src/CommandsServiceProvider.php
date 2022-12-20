@@ -3,7 +3,8 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
-use Billing\Commands\BillingCommands;
+use Billing\Commands\InstallCommand;
+use Billing\Commands\HelpCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -41,7 +42,7 @@ class CommandsServiceProvider extends ServiceProvider
             ], 'lang');*/
 
       // Registering package commands.
-      $this->commands([BillingCommands::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class]);
     }
   }
 

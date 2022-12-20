@@ -5,7 +5,7 @@ namespace Billing\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
-class BillingCommands extends Command
+class InstallCommand extends Command
 {
 
   protected $signature = 'billing:install {ver=stable} {lic_key?} {ver_num=latest}';
@@ -26,9 +26,6 @@ class BillingCommands extends Command
   {
     $this->prepareArgs($this->arguments());
     switch ($this->argument('ver')) {
-      case 'help':
-        $this->help();
-        break;
       case 'check_version':
         $this->checkVersion();
         break;
@@ -164,17 +161,6 @@ class BillingCommands extends Command
       $this->install[$key] = $val;
     }
     unset($this->install['command']);
-  }
-
-  private function help()
-  {
-    $help = '
-      Help:
-      php artisan billing:install installer - updating the command to automatically install the module (recommended to run before each installation/update of the module)
-      php artisan billing:install stable {license key}(optional) - install stable version
-      php artisan billing:install dev {license key}(optional) - install dev version(no recommend!!!)
-      ';
-    return $this->infoNewLine($help);
   }
 
   private function infoNewLine($text)
