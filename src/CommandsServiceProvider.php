@@ -5,6 +5,8 @@ namespace Billing\Commands;
 use Illuminate\Support\ServiceProvider;
 use Billing\Commands\Commands\InstallCommand;
 use Billing\Commands\Commands\HelpCommand;
+use Billing\Commands\Commands\CheckVersionCommand;
+use Billing\Commands\Commands\UninstallCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -42,7 +44,7 @@ class CommandsServiceProvider extends ServiceProvider
             ], 'lang');*/
 
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class]);
     }
   }
 

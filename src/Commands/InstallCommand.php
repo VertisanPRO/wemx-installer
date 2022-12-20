@@ -25,17 +25,7 @@ class InstallCommand extends Command
   public function handle()
   {
     $this->prepareArgs($this->arguments());
-    switch ($this->argument('ver')) {
-      case 'check_version':
-        $this->checkVersion();
-        break;
-      case 'uninstall':
-        $this->uninstall();
-        break;
-      default:
-        $this->install();
-        break;
-    }
+    $this->install();
   }
 
   private function install()
@@ -235,44 +225,5 @@ class InstallCommand extends Command
     }
 
     return true;
-  }
-
-  private function checkVersion()
-  {
-    $license = \Pterodactyl\Models\Billing\Bill::settings()->getParam('license_key');
-    $build = 'https://vertisanpro.com/api/handler/billing/' . $license . '/status';
-    $build = Http::get($build)->object();
-
-    if (!$build->response and config('app.aliases.Bill') !== NULL) {
-      $this->uninstall();
-      exit;
-    }
-  }
-
-  private function uninstall()
-  {
-    $this->info('Updating Pterodactyl to the latest version');
-
-    /**
-     * Commences update proccess and 
-     * executes commands below into terminal. 
-     */
-
-    exec('php artisan down');
-    exec('cd ' . base_path());
-    exec('curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv');
-    exec('chmod -R 755 storage/* bootstrap/cache');
-    exec('echo \"yes\" | composer install --no-dev --optimize-autoloader');
-    exec('php artisan view:clear && php artisan config:clear');
-    exec('php artisan migrate --seed --force');
-
-    exec('chown -R www-data:www-data ' . base_path() . '/*');
-    exec('chown -R nginx:nginx ' . base_path() . '/*');
-    exec('chown -R apache:apache ' . base_path() . '/*');
-
-
-    exec('php artisan queue:restart');
-    exec('php artisan up');
-    $this->info('Update Complete - Successfully Installed the latest version of Pterodactyl Panel!');
   }
 }

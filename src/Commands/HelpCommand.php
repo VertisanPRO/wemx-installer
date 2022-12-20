@@ -19,9 +19,10 @@ class HelpCommand extends Command
   {
     $help = '
       Help:
-      php artisan billing:install installer - updating the command to automatically install the module (recommended to run before each installation/update of the module)
+      php artisan billing:help - Help
       php artisan billing:install stable {license key}(optional) - install stable version
       php artisan billing:install dev {license key}(optional) - install dev version(no recommend!!!)
+      php artisan billing:uninstall - Removes the module and reinstalls the Pterodactyl panel
       ';
     return $this->infoNewLine($help);
   }
