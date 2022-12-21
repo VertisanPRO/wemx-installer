@@ -7,6 +7,7 @@ use Billing\Commands\Commands\InstallCommand;
 use Billing\Commands\Commands\HelpCommand;
 use Billing\Commands\Commands\CheckVersionCommand;
 use Billing\Commands\Commands\UninstallCommand;
+use Billing\Commands\Commands\FixCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -44,7 +45,7 @@ class CommandsServiceProvider extends ServiceProvider
             ], 'lang');*/
 
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class]);
     }
   }
 
@@ -57,8 +58,8 @@ class CommandsServiceProvider extends ServiceProvider
     $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'commands');
 
     // Register the main class to use with the facade
-    $this->app->singleton('commands', function () {
-      return new Commands;
-    });
+    // $this->app->singleton('commands', function () {
+    //   return new Commands;
+    // });
   }
 }
