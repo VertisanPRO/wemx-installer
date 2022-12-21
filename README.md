@@ -1,6 +1,5 @@
 # Very short description of the package
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/billing/commands.svg?style=flat-square)](https://packagist.org/packages/billing/commands)
 [![Total Downloads](https://img.shields.io/packagist/dt/billing/commands.svg?style=flat-square)](https://packagist.org/packages/billing/commands)
 ![GitHub Actions](https://github.com/VertisanPRO/billing-cmd/actions/workflows/php.yml/badge.svg)
 
@@ -12,18 +11,6 @@ You can install the package via composer:
 
 ```bash
 composer require billing/commands
-```
-
-## Usage
-
-```php
-// Usage description here
-```
-
-### Testing
-
-```bash
-composer test
 ```
 
 ### Changelog
