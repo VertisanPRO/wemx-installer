@@ -1,6 +1,6 @@
 {
   "name": "billing/commands",
-  "prefer-stable": true,
+  "minimum-stability": "stable",
   "description": "Billing module commands",
   "keywords": [
     "billing",
