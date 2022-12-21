@@ -3,6 +3,7 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Scheduling\Schedule;
 use Billing\Commands\Commands\InstallCommand;
 use Billing\Commands\Commands\HelpCommand;
 use Billing\Commands\Commands\CheckVersionCommand;
@@ -23,6 +24,11 @@ class CommandsServiceProvider extends ServiceProvider
     // $this->loadViewsFrom(__DIR__.'/../resources/views', 'commands');
     // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
     // $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+    // $this->app->booted(function () {
+    //   $schedule = app(Schedule::class);
+    //   $schedule->command('foo:bar')->everyMinute();
+    // });
 
     if ($this->app->runningInConsole()) {
       $this->publishes([
