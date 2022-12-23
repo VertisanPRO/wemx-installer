@@ -3,6 +3,7 @@
 namespace Billing\Commands\Commands;
 
 use Illuminate\Console\Command;
+use Pterodactyl\Models\Billing\Bill;
 
 class LicenseCommand extends Command
 {
