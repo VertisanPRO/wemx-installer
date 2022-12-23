@@ -3,7 +3,7 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Console\Scheduling\Schedule;
+use Billing\Commands\Commands\LicenseCommand;
 use Billing\Commands\Commands\InstallCommand;
 use Billing\Commands\Commands\HelpCommand;
 use Billing\Commands\Commands\CheckVersionCommand;
@@ -51,7 +51,7 @@ class CommandsServiceProvider extends ServiceProvider
             ], 'lang');*/
 
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class]);
     }
   }
 
