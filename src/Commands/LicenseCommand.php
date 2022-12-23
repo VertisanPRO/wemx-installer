@@ -18,10 +18,11 @@ class LicenseCommand extends Command
 
   private function setLicense()
   {
-    $lic = Bill::settings();
-    $lic->name = 'license_key';
-    $lic->data = $this->argument('lic_key');
-    $lic->save();
+    Bill::settings()->updateOrCreate(
+      ['name' => 'license_key'],
+      ['data' => $this->argument('lic_key')]
+    );
+
     return $this->info('License save to DB ' . $this->argument('lic_key'));
   }
 }
