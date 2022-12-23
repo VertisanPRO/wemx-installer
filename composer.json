@@ -4,7 +4,6 @@
   "prefer-stable": true,
   "description": "Billing module commands",
   "keywords": [
-    "billing",
     "commands"
   ],
   "homepage": "https://wemx.net",
@@ -17,9 +16,6 @@
       "role": "Developer"
     }
   ],
-  "require": {
-    "php": "^7.4|^8.0"
-  },
   "autoload": {
     "psr-4": {
       "Billing\\Commands\\": "src"
