@@ -9,6 +9,7 @@ use Billing\Commands\Commands\HelpCommand;
 use Billing\Commands\Commands\CheckVersionCommand;
 use Billing\Commands\Commands\UninstallCommand;
 use Billing\Commands\Commands\FixCommand;
+use Billing\Commands\Commands\YarnCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -51,7 +52,7 @@ class CommandsServiceProvider extends ServiceProvider
             ], 'lang');*/
 
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class]);
     }
   }
 

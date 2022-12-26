@@ -25,7 +25,7 @@ class HelpCommand extends Command
   php artisan billing:uninstall - Removes the module and reinstalls the Pterodactyl panel
   php artisan billing:license - Save license key to DB
   php artisan billing:fix - Fixes bugs with the old installer
-  ';
+  php artisan billing:yarn - Install Node and Yarn Ubuntu';
     return $this->info($help);
   }
 }
