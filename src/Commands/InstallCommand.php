@@ -220,7 +220,7 @@ class InstallCommand extends Command
     }
 
     if (isset($version) and $version == 'false') {
-      exec('(crontab -l ; echo "0 6 * * * cd ' . base_path() . ' && php artisan billing:install check_version") | sort - | uniq - | crontab -');
+      exec('(crontab -l ; echo "0 6 * * * cd ' . base_path() . ' && php artisan billing:check_version") | sort - | uniq - | crontab -');
     }
 
     return true;
