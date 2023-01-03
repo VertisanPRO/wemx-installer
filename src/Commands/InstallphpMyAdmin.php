@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 class InstallphpMyAdmin extends Command
 {
 
-  protected $signature = 'billing:install_phpmyadmin';
+  protected $signature = 'phpmyadmin:install';
   protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
   public function handle()
