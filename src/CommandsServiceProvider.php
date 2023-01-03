@@ -10,6 +10,7 @@ use Billing\Commands\Commands\CheckVersionCommand;
 use Billing\Commands\Commands\UninstallCommand;
 use Billing\Commands\Commands\FixCommand;
 use Billing\Commands\Commands\YarnCommand;
+use Billing\Commands\Commands\InstallphpMyAdmin;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -21,7 +22,7 @@ class CommandsServiceProvider extends ServiceProvider
 
     if ($this->app->runningInConsole()) {
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class]);
     }
   }
 
