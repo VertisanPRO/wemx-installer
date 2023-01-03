@@ -25,7 +25,7 @@ function rmrfdir($dir) {
             continue;
         }
 
-        if (!rmrfdir($dir . DIRECTORY_SEPARATOR . $item)) {
+        if (!$this->rmrfdir($dir . DIRECTORY_SEPARATOR . $item)) {
             return false;
         }
 
