@@ -118,7 +118,7 @@ class InstallCommand extends Command
   private function dataPrepare($data)
   {
     if (!$data->status) {
-      $this->infoNewLine($data->text);
+      $this->warning($data->text);
       unset($data->text);
       return;
     }
