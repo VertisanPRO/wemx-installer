@@ -11,6 +11,7 @@ use Billing\Commands\Commands\UninstallCommand;
 use Billing\Commands\Commands\FixCommand;
 use Billing\Commands\Commands\YarnCommand;
 use Billing\Commands\Commands\InstallphpMyAdmin;
+use Billing\Commands\Commands\CreateMySQLUser;
 
 class CommandsServiceProvider extends ServiceProvider
 {
