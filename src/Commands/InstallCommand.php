@@ -179,13 +179,6 @@ class InstallCommand extends Command
     }
   }
 
-  private function setConfigAlias($key = 'app.aliases.Bill', $val = 'Pterodactyl\Models\Billing\Bill')
-  {
-    // config([$key => $val]);
-    // $text = '<?php return ' . var_export(config('app'), true) . ';';
-    // file_put_contents(config_path('app.php'), $text);
-  }
-
   private function installSocialite()
   {
 
