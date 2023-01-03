@@ -18,8 +18,8 @@ class InstallphpMyAdmin extends Command
   private function install()
   {
     mkdir('public/phpmyadmin');
-    exec('wget -O phpMyadmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
-    exec('unzip -o phpMyadmin.zip -d public/phpmyadmin -qq');
+    exec('wget -O phpMyAdmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
+    exec('unzip -o phpMyAdmin.zip -d public/phpmyadmin -qq');
     unlink('phpMyAdmin.zip');
     exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
     recurseRmdir('public/phpmyadmin/phpMyAdmin-*');
