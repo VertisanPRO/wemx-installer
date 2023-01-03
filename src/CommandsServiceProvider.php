@@ -33,7 +33,7 @@ class CommandsServiceProvider extends ServiceProvider
     // Automatically apply the package configuration
     $this->mergeConfigFrom(
       __DIR__ . '/../config/aliases.php',
-      'commands.aliases'
+      'app.aliases'
     );
   }
 }
