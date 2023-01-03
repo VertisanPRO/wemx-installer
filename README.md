@@ -1,7 +1,6 @@
 # Very short description of the package
 
 [![Total Downloads](https://img.shields.io/packagist/dt/billing/commands.svg?style=flat-square)](https://packagist.org/packages/billing/commands)
-![GitHub Actions](https://github.com/VertisanPRO/billing-cmd/actions/workflows/php.yml/badge.svg)
 
 This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
 
