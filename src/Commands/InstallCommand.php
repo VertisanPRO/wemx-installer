@@ -118,7 +118,7 @@ class InstallCommand extends Command
   private function dataPrepare($data)
   {
     if (!$data->status) {
-      $this->warn($data->text);
+      $this->infoNewLine($data->text, true);
       unset($data->text);
       return;
     }
@@ -152,10 +152,15 @@ class InstallCommand extends Command
     unset($this->install['command']);
   }
 
-  private function infoNewLine($text)
+  private function infoNewLine($text, $warn = false)
   {
     $this->newLine();
-    $this->info($text);
+    if ($warn) {
+      $this->warn($text);
+    } else {
+      $this->info($text);
+    }
+
     $this->newLine();
   }
 
