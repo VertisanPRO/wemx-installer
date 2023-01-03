@@ -10,6 +10,17 @@ class InstallphpMyAdmin extends Command
   protected $signature = 'phpmyadmin:install';
   protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
+
+    public function rmrfdir($path) {
+        $files = glob($path . '/*');
+        foreach ($files as $file) {
+            is_dir($file) ? $this->rmrfdir($file) : unlink($file);
+        }
+        rmdir($path);
+
+        return;
+    }
+
   public function handle()
   {
     $this->install();
@@ -17,12 +28,22 @@ class InstallphpMyAdmin extends Command
 
   private function install()
   {
-    mkdir('public/phpmyadmin');
-    exec('wget -O phpMyAdmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
-    exec('unzip -o phpMyAdmin.zip -d public/phpmyadmin -qq');
-    unlink('phpMyAdmin.zip');
-    exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
-    recurseRmdir('public/phpmyadmin/phpMyAdmin-*');
-    return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
+    if (!file_exists('public/phpmyadmin')) {
+        mkdir('public/phpmyadmin');
+        exec('wget -O phpMyAdmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
+        exec('unzip -o phpMyAdmin.zip -d public/phpmyadmin -qq');
+        unlink('phpMyAdmin.zip');
+        exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
+        $this->rmrfdir('public/phpmyadmin/phpMyAdmin-*');
+        return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
+    } else {
+        if (!$this->confirm('You already have a phpMyAdmin folder, are you sure you want to remove it?')) {
+            $this->warn('Installation has been cancelled');
+
+            return;
+        }
+        $this->rmrfdir('public/phpmyadmin');
+        exec('php artisan phpmyadmin:install');
+    }
   }
 }
