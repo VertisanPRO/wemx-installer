@@ -36,7 +36,7 @@ class InstallphpMyAdmin extends Command
             unlink('phpMyAdmin-latest-all-languages.zip');
             exec('wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
         }
-        exec('unzip -o phpMyAdmin-latest-all-languages.zip -d public/phpmyadmin -q');
+        exec('unzip -q -o phpMyAdmin-latest-all-languages.zip -d public/phpmyadmin');
         unlink('phpMyAdmin-latest-all-languages.zip');
         exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
         $this->rmrfdir('public/phpmyadmin/phpMyAdmin-*');
