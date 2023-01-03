@@ -62,6 +62,6 @@ function rmrfdir($dir) {
         $this->rmrfdir('public/phpmyadmin');
         exec('php artisan phpmyadmin:install');
     }
-    return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
+    return $this->info('phpMyAdmin has been successfully installed. It is available on' . env('APP_URL') . '/phpmyadmin');
   }
 }
