@@ -53,7 +53,6 @@ function rmrfdir($dir) {
         unlink('phpMyAdmin-latest-all-languages.zip');
         exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
         $this->rmrfdir('public/phpmyadmin/phpMyAdmin-*');
-        return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
     } else {
         if (!$this->confirm('You already have a phpMyAdmin folder, are you sure you want to remove it?')) {
             $this->warn('Installation has been cancelled');
@@ -63,5 +62,6 @@ function rmrfdir($dir) {
         $this->rmrfdir('public/phpmyadmin');
         exec('php artisan phpmyadmin:install');
     }
+    return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
   }
 }
