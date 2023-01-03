@@ -30,7 +30,6 @@
         "Billing\\Commands\\CommandsServiceProvider"
       ],
       "aliases": {
-        "Commands": "Billing\\Commands\\CommandsFacade",
         "Bill": "Pterodactyl\\Models\\Billing\\Bill"
       }
     }
