@@ -22,7 +22,7 @@ class CommandsServiceProvider extends ServiceProvider
 
     if ($this->app->runningInConsole()) {
       // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class]);
+      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class]);
     }
   }
 

@@ -11,7 +11,7 @@ class InstallphpMyAdmin extends Command
   protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
 
-function rmrfdir($dir) {
+public function rmrfdir($dir) {
     if (!file_exists($dir)) {
         return true;
     }
@@ -62,6 +62,12 @@ function rmrfdir($dir) {
         $this->rmrfdir('public/phpmyadmin');
         exec('php artisan phpmyadmin:install');
     }
-    return $this->info('phpMyAdmin has been successfully installed. It is available on' . env('APP_URL') . '/phpmyadmin');
+    $this->info('phpMyAdmin has been successfully installed. It is available on ' . config('APP_URL', 'example.com') . '/phpmyadmin');
+    if (!$this->confirm('Would you like to create a MySQL account that will be available for phpMyAdmin?')) {
+        $this->warn('User was not created');
+
+        return;
+    }
+    return exec('php artisan phpmyadmin:user');
   }
 }
