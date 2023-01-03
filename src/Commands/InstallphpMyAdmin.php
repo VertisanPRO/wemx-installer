@@ -11,15 +11,28 @@ class InstallphpMyAdmin extends Command
   protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
 
-    public function rmrfdir($path) {
-        $files = glob($path . '/*');
-        foreach ($files as $file) {
-            is_dir($file) ? $this->rmrfdir($file) : unlink($file);
-        }
-        rmdir($path);
-
-        return;
+function rmrfdir($dir) {
+    if (!file_exists($dir)) {
+        return true;
     }
+
+    if (!is_dir($dir)) {
+        return unlink($dir);
+    }
+
+    foreach (scandir($dir) as $item) {
+        if ($item == '.' || $item == '..') {
+            continue;
+        }
+
+        if (!rmrfdir($dir . DIRECTORY_SEPARATOR . $item)) {
+            return false;
+        }
+
+    }
+
+    return rmdir($dir);
+}
 
   public function handle()
   {
