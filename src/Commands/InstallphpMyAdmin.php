@@ -30,9 +30,14 @@ class InstallphpMyAdmin extends Command
   {
     if (!file_exists('public/phpmyadmin')) {
         mkdir('public/phpmyadmin');
-        exec('wget -O phpMyAdmin.zip https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
-        exec('unzip -o phpMyAdmin.zip -d public/phpmyadmin -qq');
-        unlink('phpMyAdmin.zip');
+        if(!file_exists('phpMyAdmin-latest-all-languages.zip')) {
+            exec('wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
+        } else {
+            unlink('phpMyAdmin-latest-all-languages.zip');
+            exec('wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip -q');
+        }
+        exec('unzip -o phpMyAdmin-latest-all-languages.zip -d public/phpmyadmin -q');
+        unlink('phpMyAdmin-latest-all-languages.zip');
         exec('mv public/phpmyadmin/phpMyAdmin-*/* public/phpmyadmin');
         $this->rmrfdir('public/phpmyadmin/phpMyAdmin-*');
         return $this->info('phpMyAdmin has been successfully installed. It is available on yourdomain.com/phpmyadmin');
