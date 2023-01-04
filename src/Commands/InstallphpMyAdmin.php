@@ -63,12 +63,12 @@ class InstallphpMyAdmin extends Command
             $this->rmrfdir('public/phpmyadmin');
             exec('php artisan phpmyadmin:install');
         }
-        $this->info('phpMyAdmin has been successfully installed. It is available on ' . config('APP_URL', 'example.com') . '/phpmyadmin');
+        $this->info('phpMyAdmin has been successfully installed. It is available on ' . config('APP_URL') . '/phpmyadmin');
         if (!$this->confirm('Would you like to create a MySQL account that will be available for phpMyAdmin?')) {
             $this->warn('User was not created');
 
             return;
         }
-        return exec('php artisan phpmyadmin:user');
+        return exec('php artisan phpmyadmin:user:make');
     }
 }
