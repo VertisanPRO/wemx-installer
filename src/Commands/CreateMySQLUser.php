@@ -17,6 +17,15 @@ class CreateMySQLUser extends Command
 
     private function create()
     {
+        exec('CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY test; > /dev/null 2>&1 &', $output);
+        if (str_contains($output, 'Operation CREATE USER failed')) {
+            if (!$this->confirm('You already have a user named phpmyadmin, are you sure you want to delete it?')) {
+                $this->warn('The user was not deleted');
+
+                return;
+            }
+        }
+        exec('mysql -u root -e "DROP USER \'phpmyadmin\'@\'%\'; > /dev/null 2>&1 &"');
         $pass = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8);
         $q0 = 'CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY \'' . $pass . '\';';
         $q1 = 'GRANT ALL PRIVILEGES ON *.* TO \'phpmyadmin\'@\'%\' WITH GRANT OPTION;';
