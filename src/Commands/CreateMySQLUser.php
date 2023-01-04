@@ -20,7 +20,7 @@ class CreateMySQLUser extends Command
     }
     $db = $this->choice(
       "Select Databse:",
-      $this->getDatabase()
+      $this->getDatabases()
     );
     $this->create($user, $db, $allow_ip);
   }
@@ -50,7 +50,7 @@ class CreateMySQLUser extends Command
     $this->info('Password: ' . $pass);
   }
 
-  private function getDatabase()
+  private function getDatabases()
   {
     exec("mysql -u root -e 'SHOW DATABASES'", $output);
     $output['0'] = 'All';
