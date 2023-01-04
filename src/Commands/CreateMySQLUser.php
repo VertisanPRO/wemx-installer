@@ -17,8 +17,7 @@ class CreateMySQLUser extends Command
 
     private function create()
     {
-        $this->info('If an error appears, ignore it');
-        $check = exec('mysql -u root -e "CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY \'test\';"', );
+        $check = exec('mysql -u root -e "CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY \'test\';" > /dev/null 2>&1 &', );
         if (str_contains($check, 'Operation CREATE USER failed')) {
             if (!$this->confirm('You already have a user named phpmyadmin, are you sure you want to delete it?')) {
                 $this->warn('The user was not deleted');
@@ -26,7 +25,7 @@ class CreateMySQLUser extends Command
                 return;
             }
         }
-        exec('mysql -u root -e "DROP USER \'phpmyadmin\'@\'%\'; > /dev/null 2>&1 &"');
+        exec('mysql -u root -e "DROP USER \'phpmyadmin\'@\'%\';" > /dev/null 2>&1 &');
         $pass = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 8);
         $q0 = 'CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY \'' . $pass . '\';';
         $q1 = 'GRANT ALL PRIVILEGES ON *.* TO \'phpmyadmin\'@\'%\' WITH GRANT OPTION;';
