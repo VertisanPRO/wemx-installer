@@ -16,27 +16,27 @@ use Billing\Commands\Commands\DeleteMySQLUser;
 
 class CommandsServiceProvider extends ServiceProvider
 {
-  /**
-   * Bootstrap the application services.
-   */
-  public function boot()
-  {
+    /**
+     * Bootstrap the application services.
+     */
+    public function boot()
+    {
 
-    if ($this->app->runningInConsole()) {
-      // Registering package commands.
-      $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class]);
+        if ($this->app->runningInConsole()) {
+            // Registering package commands.
+            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class]);
+        }
     }
-  }
 
-  /**
-   * Register the application services.
-   */
-  public function register()
-  {
-    // Automatically apply the package configuration
-    $this->mergeConfigFrom(
-      __DIR__ . '/../config/aliases.php',
-      'app.aliases'
-    );
-  }
+    /**
+     * Register the application services.
+     */
+    public function register()
+    {
+        // Automatically apply the package configuration
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/aliases.php',
+            'app.aliases'
+        );
+    }
 }

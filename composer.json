@@ -1,37 +1,42 @@
 {
-  "name": "billing/commands",
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "description": "Billing module commands",
-  "keywords": [
-    "commands"
-  ],
-  "homepage": "https://wemx.net",
-  "license": "MIT",
-  "type": "library",
-  "authors": [
-    {
-      "name": "GIGABAIT",
-      "email": "xgigabaitx@gmail.com",
-      "role": "Developer"
+    "name": "billing/commands",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "description": "Billing module commands",
+    "keywords": [
+        "commands"
+    ],
+    "homepage": "https://wemx.net",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "GIGABAIT",
+            "email": "xgigabaitx@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "PadowYT2",
+            "email": "me@padow.ru",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Billing\\Commands\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Billing\\Commands\\CommandsServiceProvider"
+            ],
+            "aliases": {
+                "Bill": "Pterodactyl\\Models\\Billing\\Bill"
+            }
+        }
     }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Billing\\Commands\\": "src"
-    }
-  },
-  "config": {
-    "sort-packages": true
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "Billing\\Commands\\CommandsServiceProvider"
-      ],
-      "aliases": {
-        "Bill": "Pterodactyl\\Models\\Billing\\Bill"
-      }
-    }
-  }
 }
