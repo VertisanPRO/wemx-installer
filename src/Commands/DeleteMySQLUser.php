@@ -23,7 +23,7 @@ class DeleteMySQLUser extends Command
             return;
         }
 
-        exec('mysql -u root -e DROP USER \'phpmyadmin\'@\'%\';');
+        exec('mysql -u root -e "DROP USER \'phpmyadmin\'@\'%\';"');
         return $this->info('User has been deleted');
     }
 }
