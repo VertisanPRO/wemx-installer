@@ -18,7 +18,7 @@ class CreateMySQLUser extends Command
     private function create()
     {
         $this->info('If an error appears, ignore it');
-        exec('CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY test;', $output);
+        exec('mysql -u root -e "CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY test;"', $output);
         if (str_contains($output, 'Operation CREATE USER failed')) {
             if (!$this->confirm('You already have a user named phpmyadmin, are you sure you want to delete it?')) {
                 $this->warn('The user was not deleted');
