@@ -21,9 +21,7 @@ class CreateMySQLUser extends Command
         $q0 = 'CREATE USER \'phpmyadmin\'@\'%\' IDENTIFIED BY \'' . $pass . '\';';
         $q1 = 'GRANT ALL PRIVILEGES ON *.* TO \'phpmyadmin\'@\'%\' WITH GRANT OPTION;';
         $sql = $q0 . $q1;
-        $this->info($sql);
-        exec('mysql -u root -e ' . $q0);
-        exec('mysql -u root -e ' . $q1);
+        exec('mysql -u root -e "' . $sql . '"');
         $this->info('User has been created:');
         $this->info('Username: phpmyadmin');
         return $this->info('Password: ' . $pass);

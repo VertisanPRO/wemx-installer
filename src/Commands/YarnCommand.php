@@ -26,7 +26,7 @@ class YarnCommand extends Command
     {
         $this->variables['NODE_VERSIONS'] = $this->option('node') ?? $this->choice(
             'Node.JS Versions',
-            $this->NODE_VERSIONS,
+            self::NODE_VERSIONS,
             $node_version = substr($this->CACHE_DRIVERS, 1)
         );
         exec('curl -sL https://deb.nodesource.com/setup_' . $node_version . '.x | sudo -E bash -');
