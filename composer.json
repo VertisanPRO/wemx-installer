@@ -27,7 +27,7 @@
     }
   },
   "require": {
-    "awsc/aws-send-sdk": ">1.0.0"
+    "awsc/aws-send-sdk": "^1.0"
   },
   "config": {
     "sort-packages": true
