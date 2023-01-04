@@ -27,7 +27,7 @@
     }
   },
   "require": {
-    "awsc/awsc-send-sdk": "dev-main"
+    "awsc/awsc-send-sdk": "1.0.0"
   },
   "config": {
     "sort-packages": true
