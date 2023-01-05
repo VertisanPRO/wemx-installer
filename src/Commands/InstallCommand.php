@@ -9,9 +9,9 @@ class InstallCommand extends Command
 {
 
     protected $signature = 'billing:install
-                          {ver=stable : Version to install}
-                          {--lic_key= : License key to use}
-                          {--ver_num=latest : Version number to install}';
+                            {ver=stable : Version to install}
+                            {--lic_key= : License key to use}
+                            {--ver_num=latest : Version number to install}';
     protected $description = 'Installs the Billing Module for Pterodactyl';
     private $install = [];
 

@@ -17,6 +17,10 @@ class DeleteMySQLUser extends Command
 
     private function delete()
     {
+        exec('mysql -u root -e "select User, Host from mysql.user WHERE User=\'phpmyadmin\' "', $check);
+        if (empty($check)) {
+            return $this->info('You do not have a user created');
+        }
         if (!$this->confirm('Are you sure you want to delete the user?')) {
             $this->warn('The user was not deleted');
 

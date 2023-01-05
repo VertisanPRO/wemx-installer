@@ -8,7 +8,7 @@ class YarnCommand extends Command
 {
 
     protected $signature = 'yarn:install
-                          {--node= : Node.JS Version to install}';
+                            {--node= : Node.JS Version to install}';
     protected $description = 'Will install Node and Yarn for Pterodactyl';
 
     public const NODE_VERSIONS = [

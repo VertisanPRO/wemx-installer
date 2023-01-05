@@ -3,10 +3,8 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
-use Billing\Commands\Commands\LicenseCommand;
 use Billing\Commands\Commands\InstallCommand;
 use Billing\Commands\Commands\HelpCommand;
-use Billing\Commands\Commands\CheckVersionCommand;
 use Billing\Commands\Commands\UninstallCommand;
 use Billing\Commands\Commands\FixCommand;
 use Billing\Commands\Commands\YarnCommand;
@@ -24,7 +22,7 @@ class CommandsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             // Registering package commands.
-            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, CheckVersionCommand::class, FixCommand::class, LicenseCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class]);
+            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class]);
         }
     }
 
