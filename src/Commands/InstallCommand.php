@@ -41,7 +41,7 @@ class InstallCommand extends Command
 
         $this->sshUser();
         if (!isset($this->install['lic_key'])) {
-            $lic_key = $this->ask("Please enter a license key.");
+            $lic_key = $this->option('lic_key') ?? $this->ask("Please enter a license key.");
             $this->install['lic_key'] = $lic_key;
         }
 
@@ -50,7 +50,7 @@ class InstallCommand extends Command
         $this->data = [
             'license_key' => $this->install['lic_key'],
             'ver_type' => $this->install['ver'],
-            'ver_num' => $this->install['ver_num'],
+            'ver_num' => $this->option('ver_num') ?? $this->install['ver_num'],
         ];
 
         $response = Http::get($this->url, $this->data);
