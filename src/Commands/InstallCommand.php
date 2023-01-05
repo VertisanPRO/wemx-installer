@@ -228,7 +228,7 @@ class InstallCommand extends Command
         return true;
     }
 
-    private function editFile($file, $world, $text)
+    private static function editFile($file, $world, $text)
     {
         $file = new FileEditor($file);
         $file->appendAfterWord($world, $text);
