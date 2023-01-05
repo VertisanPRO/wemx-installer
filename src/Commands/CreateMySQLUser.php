@@ -14,7 +14,7 @@ class CreateMySQLUser extends Command
     public function handle()
     {
         $db = $this->choice(
-            "Select Databse:",
+            "Which database will phpMyAdmin have access to",
             $this->getDatabases()
         );
         $this->create($db);
