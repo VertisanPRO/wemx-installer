@@ -85,16 +85,25 @@ class InstallCommand extends Command
         }
         if ($data->resp) {
             if (isset($data->args)) {
-                if (is_array($data->args)) {
+                if (is_array($data->func)) {
+                    $this->setData($data->key, call_user_func($data->func));
+                } else if (is_array($data->args)) {
                     $this->setData($data->key, call_user_func_array($data->func, $data->args));
+                } else {
+                    $this->setData($data->key, call_user_func($data->func, $data->args));
                 }
-                $this->setData($data->key, call_user_func($data->func, $data->args));
             } else {
                 $this->setData($data->key, call_user_func($data->func));
             }
         } else {
             if (isset($data->args)) {
-                call_user_func_array($data->func, $data->args);
+                if (is_array($data->func)) {
+                    call_user_func($data->func);
+                } else if (is_array($data->args)) {
+                    call_user_func_array($data->func, $data->args);
+                } else {
+                    call_user_func($data->func, $data->args);
+                }
             } else {
                 call_user_func($data->func);
             }
@@ -234,6 +243,8 @@ class InstallCommand extends Command
     private static function editFile($file, $world, $text)
     {
         $file = new FileEditor($file);
-        $file->appendAfterWord($world, $text);
+        if (!$file->issetText($text)) {
+            $file->appendAfterWord($world, $text);
+        }
     }
 }

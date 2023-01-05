@@ -1,8 +1,7 @@
 <?php
 
 namespace Billing\Commands;
-// $editor = new FileEditor('file.php');
-// $editor->appendAfterWord('world', 'kdksdfklsdflsdfkl');
+
 class FileEditor
 {
     private $filename;
@@ -44,5 +43,11 @@ class FileEditor
             $end = substr($contents, $position + strlen($word));
             file_put_contents($this->filename, $start . "\n" . $text . "\n" . $end);
         }
+    }
+
+    public function issetText($text)
+    {
+        $contents = file_get_contents($this->filename);
+        return strpos($contents, $text) !== false;
     }
 }
