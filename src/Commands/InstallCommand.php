@@ -85,7 +85,10 @@ class InstallCommand extends Command
         }
         if ($data->resp) {
             if (isset($data->args)) {
-                $this->setData($data->key, call_user_func_array($data->func, $data->args));
+                if (is_array($data->args)) {
+                    $this->setData($data->key, call_user_func_array($data->func, $data->args));
+                }
+                $this->setData($data->key, call_user_func($data->func, $data->args));
             } else {
                 $this->setData($data->key, call_user_func($data->func));
             }
