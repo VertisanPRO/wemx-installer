@@ -9,10 +9,7 @@ use Billing\Commands\FileEditor;
 class InstallCommand extends Command
 {
 
-    protected $signature = 'billing:install
-                            {ver=stable : Version to install}
-                            {--lic_key= : License key to use}
-                            {--ver_num=latest : Version number to install}';
+    protected $signature = 'billing:install {ver=stable} {lic_key?} {ver_num=latest}';
     protected $description = 'Installs the Billing Module for Pterodactyl';
     private $install = [];
 
@@ -50,7 +47,7 @@ class InstallCommand extends Command
         $this->data = [
             'license_key' => $this->install['lic_key'],
             'ver_type' => $this->install['ver'],
-            'ver_num' => $this->option('ver_num') ?? $this->install['ver_num'],
+            'ver_num' => $this->install['ver_num'],
         ];
 
         $response = Http::get($this->url, $this->data);
