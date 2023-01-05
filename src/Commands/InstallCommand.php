@@ -4,6 +4,7 @@ namespace Billing\Commands\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Billing\Commands\FileEditor;
 
 class InstallCommand extends Command
 {
@@ -225,5 +226,11 @@ class InstallCommand extends Command
         }
 
         return true;
+    }
+
+    private function editFile($file, $world, $text)
+    {
+        $file = new FileEditor($file);
+        $file->appendAfterWord($world, $text);
     }
 }
