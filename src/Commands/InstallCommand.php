@@ -37,10 +37,6 @@ class InstallCommand extends Command
        ======================================");
 
         $this->sshUser();
-        if (!isset($this->install['lic_key'])) {
-            $lic_key = $this->option('lic_key') ?? $this->ask("Please enter a license key.");
-            $this->install['lic_key'] = $lic_key;
-        }
 
         $this->infoNewLine("Your license key is: {$this->install['lic_key']}");
 
