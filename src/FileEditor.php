@@ -53,12 +53,16 @@ class FileEditor
 
     public static function appendAfter($file, $word, $text)
     {
-        $contents = file_get_contents($file);
-        $position = strpos($contents, $word);
-        if ($position !== false) {
-            $start = substr($contents, 0, $position + strlen($word));
-            $end = substr($contents, $position + strlen($word));
-            file_put_contents($file, $start . "\n" . $text . "\n" . $end);
+        $isset = file_get_contents($file);
+        $isset = strpos($isset, $text) !== false;
+        if ($isset) {
+            $contents = file_get_contents($file);
+            $position = strpos($contents, $word);
+            if ($position !== false) {
+                $start = substr($contents, 0, $position + strlen($word));
+                $end = substr($contents, $position + strlen($word));
+                file_put_contents($file, $start . "\n" . $text . "\n" . $end);
+            }
         }
     }
 }
