@@ -53,10 +53,9 @@ class FileEditor
 
     public static function appendAfter($file, $word, $text)
     {
-        $isset = file_get_contents($file);
-        $isset = strpos($isset, $text) !== false;
-        if ($isset) {
-            $contents = file_get_contents($file);
+        $contents = file_get_contents($file);
+        $isset = strpos($contents, $text) !== false;
+        if (!$isset) {
             $position = strpos($contents, $word);
             if ($position !== false) {
                 $start = substr($contents, 0, $position + strlen($word));
