@@ -20,8 +20,8 @@ class HelpCommand extends Command
         $help = '
             Commands ({} means optional, [] means choose, "" means you need to type what is written in quotation marks:
             php artisan billing:help - This menu 
-            php artisan billing:install stable {--license="license_key"} - Install stable version of Billing Module
-            php artisan billing:install dev {--license="license_key"} - Install development version of Billing Module (not recommended)
+            php artisan billing:install stable {"license_key"} {"ver_num"} - Install stable version of Billing Module
+            php artisan billing:install dev {"license_key"} {"ver_num"} - Install development version of Billing Module (not recommended)
             php artisan billing:uninstall - Removes the Billing Module and reinstalls the Pterodactyl Panel (servers, nodes and settings are saved)
             php artisan billing:fix - Removes the old installer to not encounter bugs
             php artisan yarn:install {--node=[v14,v15,v16]} - Install Node.JS with Yarn and build assets
