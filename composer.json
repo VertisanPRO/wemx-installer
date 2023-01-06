@@ -38,7 +38,8 @@
                 "Billing\\Commands\\CommandsServiceProvider"
             ],
             "aliases": {
-                "Bill": "Pterodactyl\\Models\\Billing\\Bill"
+                "Bill": "Pterodactyl\\Models\\Billing\\Bill",
+                "BFileEditor": "Billing\\Commands\\FileEditor"
             }
         }
     }
