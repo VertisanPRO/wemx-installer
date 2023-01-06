@@ -11,6 +11,7 @@ use Billing\Commands\Commands\YarnCommand;
 use Billing\Commands\Commands\InstallphpMyAdmin;
 use Billing\Commands\Commands\CreateMySQLUser;
 use Billing\Commands\Commands\DeleteMySQLUser;
+use Billing\Commands\Commands\LicenseCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class CommandsServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             // Registering package commands.
-            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class]);
+            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class]);
         }
     }
 
