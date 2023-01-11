@@ -7,8 +7,7 @@ use Illuminate\Console\Command;
 class LicenseCommand extends Command
 {
 
-    protected $signature = 'billing:license
-                            {--license= : License key to use}';
+    protected $signature = 'billing:license {lic_key}';
     protected $description = 'Save license key to DB Billing Module for Pterodactyl';
 
     public function handle()
