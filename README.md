@@ -1,6 +1,6 @@
 # Very short description of the package
 
-[![Total Downloads](https://img.shields.io/packagist/dt/billing/commands.svg?style=flat-square)](https://packagist.org/packages/billing/commands)
+[![Total Downloads](https://img.shields.io/packagist/dt/wemx/installer.svg?style=flat-square)](https://packagist.org/packages/wemx/installer)
 
 ## Installation
 
