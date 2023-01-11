@@ -7,7 +7,7 @@
 You can install the package via composer:
 
 ```bash
-composer require billing/commands
+composer require wemx/installer
 ```
 
 ## Credits
