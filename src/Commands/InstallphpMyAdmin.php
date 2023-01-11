@@ -1,9 +1,9 @@
 <?php
 
-namespace Billing\Commands\Commands;
+namespace Wemx\Installer\Commands;
 
 use Illuminate\Console\Command;
-use Billing\Commands\Commands\CreateMySQLUser;
+use Wemx\Installer\Commands\CreateMySQLUser;
 
 class InstallphpMyAdmin extends Command
 {

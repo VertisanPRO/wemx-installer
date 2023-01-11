@@ -3,15 +3,15 @@
 namespace Billing\Commands;
 
 use Illuminate\Support\ServiceProvider;
-use Billing\Commands\Commands\InstallCommand;
-use Billing\Commands\Commands\HelpCommand;
-use Billing\Commands\Commands\UninstallCommand;
-use Billing\Commands\Commands\FixCommand;
-use Billing\Commands\Commands\YarnCommand;
-use Billing\Commands\Commands\InstallphpMyAdmin;
-use Billing\Commands\Commands\CreateMySQLUser;
-use Billing\Commands\Commands\DeleteMySQLUser;
-use Billing\Commands\Commands\LicenseCommand;
+use Wemx\Installer\Commands\InstallCommand;
+use Wemx\Installer\Commands\HelpCommand;
+use Wemx\Installer\Commands\UninstallCommand;
+use Wemx\Installer\Commands\FixCommand;
+use Wemx\Installer\Commands\YarnCommand;
+use Wemx\Installer\Commands\InstallphpMyAdmin;
+use Wemx\Installer\Commands\CreateMySQLUser;
+use Wemx\Installer\Commands\DeleteMySQLUser;
+use Wemx\Installer\Commands\LicenseCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
