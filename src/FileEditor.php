@@ -1,6 +1,6 @@
 <?php
 
-namespace Billing\Commands;
+namespace Wemx\Installer\Commands;
 
 class FileEditor
 {

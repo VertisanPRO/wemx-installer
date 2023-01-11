@@ -1,11 +1,8 @@
 {
-    "name": "billing/commands",
+    "name": "wemx/installer",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "description": "Billing module commands",
-    "keywords": [
-        "commands"
-    ],
+    "description": "Wemx module commands",
     "homepage": "https://wemx.net",
     "license": "MIT",
     "type": "library",
@@ -23,7 +20,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Billing\\Commands\\": "src"
+            "Wemx\\Installer\\": "src"
         }
     },
     "require": {
@@ -35,11 +32,11 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Billing\\Commands\\CommandsServiceProvider"
+                "Wemx\\Installer\\CommandsServiceProvider"
             ],
             "aliases": {
                 "Bill": "Pterodactyl\\Models\\Billing\\Bill",
-                "BFileEditor": "Billing\\Commands\\FileEditor"
+                "BFileEditor": "Wemx\\Installer\\FileEditor"
             }
         }
     }
