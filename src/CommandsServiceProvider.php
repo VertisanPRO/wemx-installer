@@ -25,6 +25,7 @@ class CommandsServiceProvider extends ServiceProvider
             // Registering package commands.
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class]);
         }
+        // $this->loadRoutesFrom(base_path() . '/routes/gmd.php');
     }
 
     /**
