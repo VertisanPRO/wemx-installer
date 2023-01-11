@@ -1,6 +1,6 @@
 <?php
 
-namespace Billing\Commands;
+namespace Wemx\Installer;
 
 use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\InstallCommand;
