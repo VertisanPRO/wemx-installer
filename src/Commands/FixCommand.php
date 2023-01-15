@@ -12,15 +12,16 @@ class FixCommand extends Command
 
     public function handle()
     {
-        $this->fix();
+        $this->removeFile(base_path() . '/app/Console/Commands/BillingModule.php');
+        $this->removeFile(base_path() . '/routes/custom/register_module.php');
     }
 
-    private function fix()
+    private function removeFile($file_path)
     {
-        if (file_exists(base_path() . '/app/Console/Commands/BillingModule.php')) {
-            unlink(base_path() . '/app/Console/Commands/BillingModule.php');
-            return $this->info('Old installer removed');
+        if (file_exists($file_path)) {
+            unlink($file_path);
+            return true;
         }
-        return $this->info('No problems were found');
+        return false;
     }
 }
