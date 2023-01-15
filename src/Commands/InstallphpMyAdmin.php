@@ -43,6 +43,7 @@ class InstallphpMyAdmin extends Command
 
     private function install()
     {
+        $this->info(getcwd());
         if (!file_exists('public/phpmyadmin')) {
             mkdir('public/phpmyadmin');
             if (!file_exists('phpMyAdmin-latest-all-languages.zip')) {
