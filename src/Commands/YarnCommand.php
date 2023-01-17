@@ -19,11 +19,6 @@ class YarnCommand extends Command
 
     public function handle()
     {
-        $this->yarn();
-    }
-
-    private function yarn()
-    {
         $this->variables['NODE_VERSIONS'] = $this->option('node') ?? $this->choice(
             'Node.JS Versions',
             self::NODE_VERSIONS

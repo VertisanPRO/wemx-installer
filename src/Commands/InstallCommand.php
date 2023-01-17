@@ -25,16 +25,11 @@ class InstallCommand extends Command
     public function handle()
     {
         $this->prepareArgs($this->arguments());
-        $this->install();
-    }
-
-    private function install()
-    {
         $this->infoNewLine("
-       ======================================
-       |||  Billing Module Installer      |||
-       |||          By Gigabait & Mubeen  |||
-       ======================================");
+        ======================================
+        |||  Billing Module Installer      |||
+        |||          By Gigabait & Mubeen  |||
+        ======================================");
 
         $this->sshUser();
         if (!isset($this->install['lic_key'])) {

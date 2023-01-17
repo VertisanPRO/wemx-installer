@@ -17,11 +17,6 @@ class CreateMySQLUser extends Command
             "Which database will phpMyAdmin have access to",
             $this->getDatabases()
         );
-        $this->create($db);
-    }
-
-    private function create($db)
-    {
         if ($db == "All") {
             $db = '*';
         }

@@ -12,11 +12,6 @@ class LicenseCommand extends Command
 
     public function handle()
     {
-        $this->setLicense();
-    }
-
-    private function setLicense()
-    {
         if (file_exists(base_path() . '/app/Models/Billing/Bill.php')) {
             \Pterodactyl\Models\Billing\Bill::settings()->updateOrCreate(
                 ['name' => 'license_key'],

@@ -12,11 +12,6 @@ class UninstallCommand extends Command
 
     public function handle()
     {
-        $this->uninstall();
-    }
-
-    private function uninstall()
-    {
         if (!$this->confirm('Are you sure you want to continue with the uninstallation?')) {
             $this->warn('Billing Module was not uninstalled');
 

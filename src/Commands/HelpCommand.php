@@ -12,11 +12,6 @@ class HelpCommand extends Command
 
     public function handle()
     {
-        $this->help();
-    }
-
-    private function help()
-    {
         $help = '
             Commands ({} means optional, [] means choose, "" means you need to type what is written in quotation marks:
             php artisan billing:help - This menu 
