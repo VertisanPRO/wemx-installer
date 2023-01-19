@@ -88,7 +88,7 @@ class InstallphpMyAdmin extends Command
                 return;
             }
             $this->rmrfdir('phpmyadmin');
-            InstallphpMyAdmin::handle;
+            self::handle;
         }
         if (!$this->confirm('Would you like to create a MySQL account that will be available for phpMyAdmin?')) {
             $this->warn('User was not created');
