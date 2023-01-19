@@ -48,8 +48,8 @@ class InstallphpMyAdmin extends Command
             exec('mv phpMyAdmin-*/* .');
             $this->rmrfdir('phpMyAdmin-*');
             $this->info('Files installed, configuring webserver');
-            $webServer = php_sapi_name();
-            if (strpos($webServer, 'nginx') !== false) {
+            $this->info($_SERVER["SERVER_SOFTWARE"]);
+            if (strpos($_SERVER["SERVER_SOFTWARE"], 'nginx') !== false) {
                 $file_contents = file_get_contents($path_nginx);
                 $lines = explode("\n", $file_contents);
                 array_pop($lines);
@@ -63,7 +63,7 @@ class InstallphpMyAdmin extends Command
                 file_put_contents($path_nginx, $file_contents);
                 exec($restart_nginx);
                 $this->info('phpMyAdmin has been successfully installed. It is available on ' . env('APP_URL') . '/phpmyadmin');
-            } elseif (strpos($webServer, 'apache') !== false) {
+            } elseif (strpos($_SERVER["SERVER_SOFTWARE"], 'apache') !== false) {
                 $file_contents = file_get_contents($path_apache);
                 $lines = explode("\n", $file_contents);
                 array_pop($lines);
