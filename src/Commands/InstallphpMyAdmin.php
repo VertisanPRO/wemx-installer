@@ -8,7 +8,8 @@ use Wemx\Installer\Commands\CreateMySQLUser;
 class InstallphpMyAdmin extends Command
 {
 
-    protected $signature = 'phpmyadmin:install';
+    protected $signature = 'phpmyadmin:install
+                            {--os= : OS Version you have}';
     protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
     public const OS_VERSIONS = [
