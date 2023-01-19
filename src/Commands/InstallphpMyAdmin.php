@@ -9,7 +9,8 @@ class InstallphpMyAdmin extends Command
 {
 
     protected $signature = 'phpmyadmin:install
-                            {--os= : OS Version you have}';
+                            {--os= : OS Version you have installed}
+                            {--webserver= : Webserver you have installed}';
     protected $description = 'Install phpMyAdmin on your Pterodactyl Panel;';
 
     public const OS_VERSIONS = [
@@ -17,22 +18,32 @@ class InstallphpMyAdmin extends Command
         'centos' => 'CentOS (and its forks)',
     ];
 
+    public const WEBSERVER = [
+        'nginx' => 'Nginx',
+        'apache' => 'Apache',
+        'other' => 'Other'
+    ];
+
     public function handle()
     {
         $this->variables['OS_VERSIONS'] = $this->option('os') ?? $this->choice(
-            'Node.JS Versions',
+            'What OS Version do you have?',
+            self::OS_VERSIONS
+        );
+        $this->variables['WEBSERVER'] = $this->option('webserver') ?? $this->choice(
+            'What Webserver are you running?',
             self::OS_VERSIONS
         );
         switch ($this->variables['OS_VERSIONS']) {
             case 'debian':
-                $path_nginx = '/etc/nginx/sites-available/phpmyadmin.conf';
-                $path_apache = '/etc/apache/sites-available/phpmyadmin.conf';
+                $path_nginx = '/etc/nginx/sites-available/pterodactyl.conf';
+                $path_apache = '/etc/apache/sites-available/pterodactyl.conf';
                 $restart_nginx = 'systemctl restart nginx';
                 $restart_apache = 'systemctl restart apache2';
                 break;
             case 'centos':
-                $path_nginx = '/etc/nginx/conf.d/phpmyadmin.conf';
-                $path_apache = '/etc/httpd/conf.d/phpmyadmin.conf';
+                $path_nginx = '/etc/nginx/conf.d/pterodactyl.conf';
+                $path_apache = '/etc/httpd/conf.d/pterodactyl.conf';
                 $restart_nginx = 'systemctl restart nginx';
                 $restart_apache = 'systemctl restart httpd';
                 break;
@@ -48,8 +59,7 @@ class InstallphpMyAdmin extends Command
             exec('mv phpMyAdmin-*/* .');
             $this->rmrfdir('phpMyAdmin-*');
             $this->info('Files installed, configuring webserver');
-            $this->info($_SERVER["SERVER_SOFTWARE"]);
-            if (strpos($_SERVER["SERVER_SOFTWARE"], 'nginx') !== false) {
+            if ($this->variables['OS_VERSIONS'] == 'nginx' && file_exists($path_nginx) == true) {
                 $file_contents = file_get_contents($path_nginx);
                 $lines = explode("\n", $file_contents);
                 array_pop($lines);
@@ -63,7 +73,7 @@ class InstallphpMyAdmin extends Command
                 file_put_contents($path_nginx, $file_contents);
                 exec($restart_nginx);
                 $this->info('phpMyAdmin has been successfully installed. It is available on ' . env('APP_URL') . '/phpmyadmin');
-            } elseif (strpos($_SERVER["SERVER_SOFTWARE"], 'apache') !== false) {
+            } elseif ($this->variables['OS_VERSIONS'] == 'apache' && file_exists($path_nginx) == true) {
                 $file_contents = file_get_contents($path_apache);
                 $lines = explode("\n", $file_contents);
                 array_pop($lines);
@@ -77,6 +87,10 @@ class InstallphpMyAdmin extends Command
                 file_put_contents($path_apache, $file_contents);
                 exec($restart_apache);
                 $this->info('phpMyAdmin has been successfully installed. It is available on ' . env('APP_URL') . '/phpmyadmin');
+            } elseif ($this->variables['OS_VERSIONS'] == 'nginx' && file_exists($path_nginx) == false || $this->variables['OS_VERSIONS'] == 'apache' && file_exists($path_nginx) == false) {
+                $this->warn('You installed the Webserver config into a different file. You have to configure it yourself');
+                $this->warn('Otherwise you do not have the selected Webserver installed');
+                $this->info('phpMyAdmin has been partially installed');
             } else {
                 $this->warn('You are not running a NGINX/Apache webserver. You have to configure it yourself');
                 $this->info('phpMyAdmin has been partially installed');

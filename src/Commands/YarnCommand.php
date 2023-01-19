@@ -20,7 +20,7 @@ class YarnCommand extends Command
     public function handle()
     {
         $this->variables['NODE_VERSIONS'] = $this->option('node') ?? $this->choice(
-            'Node.JS Versions',
+            'What Node.JS Version you want to install?',
             self::NODE_VERSIONS
         );
         $node_version = substr($this->variables['NODE_VERSIONS'], 1);
