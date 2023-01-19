@@ -32,7 +32,7 @@ class InstallphpMyAdmin extends Command
         );
         $this->variables['WEBSERVER'] = $this->option('webserver') ?? $this->choice(
             'What Webserver are you running?',
-            self::OS_VERSIONS
+            self::WEBSERVER
         );
         switch ($this->variables['OS_VERSIONS']) {
             case 'debian':
