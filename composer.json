@@ -2,7 +2,7 @@
     "name": "wemx/installer",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "description": "Wemx module commands",
+    "description": "WemX Installer",
     "homepage": "https://wemx.net",
     "license": "MIT",
     "type": "library",
@@ -10,7 +10,7 @@
         {
             "name": "GIGABAIT",
             "email": "xgigabaitx@gmail.com",
-            "role": "Developer"
+            "role": "Head Developer"
         },
         {
             "name": "PadowYT2",

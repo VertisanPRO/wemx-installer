@@ -1,4 +1,4 @@
-# Very short description of the package
+# WemX Installer
 
 [![Total Downloads](https://img.shields.io/packagist/dt/wemx/installer.svg?style=flat-square)](https://packagist.org/packages/wemx/installer)
 
@@ -12,5 +12,5 @@ composer require wemx/installer
 
 ## Credits
 
--   [GIGABAIT](https://github.com/billing)
--   [All Contributors](../../contributors)
+- [GIGABAIT](https://github.com/billing)
+- [All Contributors](../../contributors)
