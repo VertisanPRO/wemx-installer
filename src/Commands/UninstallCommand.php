@@ -7,18 +7,21 @@ use Illuminate\Console\Command;
 class UninstallCommand extends Command
 {
 
-    protected $signature = 'billing:uninstall';
+    protected $signature = 'billing:uninstall
+                            {--continue= : If the person wants to continue the uninstallation
+                            {--installer= : If the person wants to remove the installer';
+
     protected $description = 'Removes the module and reinstalls the Pterodactyl panel';
 
     public function handle()
     {
         $installer = 0;
-        if (!$this->confirm('Are you sure you want to continue with the uninstallation?')) {
+        if (!$this->confirm('Are you sure you want to continue with the uninstallation?') ?? $this->option('continue') == false) {
             $this->warn('Billing Module was not uninstalled');
 
             return;
         }
-        if ($this->confirm('Would you like to remove the installer also?')) {
+        if ($this->confirm('Would you like to remove the installer also?') ?? $this->option('installer') == true) {
             $installer = 1;
         }
         $commands = [
@@ -40,9 +43,9 @@ class UninstallCommand extends Command
         exec('php artisan view:clear && php artisan config:clear');
         exec('php artisan migrate --seed --force');
 
-        exec('chown -R www-data:www-data ' . base_path() . '/*');
-        exec('chown -R nginx:nginx ' . base_path() . '/*');
-        exec('chown -R apache:apache ' . base_path() . '/*');
+        @exec('chown -R www-data:www-data ' . base_path() . '/*');
+        @exec('chown -R nginx:nginx ' . base_path() . '/*');
+        @exec('chown -R apache:apache ' . base_path() . '/*');
         foreach ($commands as $value) {
             exec($value);
         }
@@ -52,6 +55,6 @@ class UninstallCommand extends Command
             exec('composer require wemx/installer');
         }
 
-        $this->info('Uninstalled the Billing Module and installed a fresh new Pterodactyl Panel');
+        return $this->info('Uninstalled the Billing Module and installed a fresh new Pterodactyl Panel');
     }
 }
