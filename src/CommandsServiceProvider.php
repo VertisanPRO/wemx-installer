@@ -20,12 +20,9 @@ class CommandsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         if ($this->app->runningInConsole()) {
-            // Registering package commands.
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class]);
         }
-        // $this->loadRoutesFrom(base_path() . '/routes/gmd.php');
     }
 
     /**
@@ -33,7 +30,6 @@ class CommandsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Automatically apply the package configuration
         $this->mergeConfigFrom(
             __DIR__ . '/../config/aliases.php',
             'app.aliases'
