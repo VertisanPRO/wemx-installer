@@ -23,11 +23,22 @@ class YarnCommand extends Command
             'What Node.JS Version you want to install?',
             self::NODE_VERSIONS
         );
-        $node_version = substr($this->variables['NODE_VERSIONS'], 1);
-        exec('curl -sL https://deb.nodesource.com/setup_' . $node_version . '.x | sudo -E bash -');
-        exec('apt install -y nodejs');
-        exec('npm i -g yarn');
-        exec('cd ' . base_path() . ' && yarn && yarn build:production');
-        return $this->info('Node.JS with Yarn have been installed and assets built');
+        $output = [];
+        exec("dpkg -s curl", $output, $return_var);
+        if ($return_var === 0) {
+            if (!$this->confirm('You already have Node.JS installed, would you like to remove it?')) {
+                $this->warn('Node.JS was not removed');
+
+                return;
+            }
+            $this->handle();
+        } else {
+            $node_version = substr($this->variables['NODE_VERSIONS'], 1);
+            exec('curl -sL https://deb.nodesource.com/setup_' . $node_version . '.x | sudo -E bash -');
+            exec('apt install -y nodejs');
+            exec('npm i -g yarn');
+            exec('yarn && yarn build:production');
+            return $this->info('Node.JS with Yarn have been installed and assets built');
+        }
     }
 }
