@@ -12,8 +12,8 @@ class FixCommand extends Command
 
     public function handle()
     {
-        $this->removeFile(base_path() . '/app/Console/Commands/BillingModule.php');
-        $this->removeFile(base_path() . '/routes/custom/register_module.php');
+        $this->removeFile('app/Console/Commands/BillingModule.php');
+        $this->removeFile('routes/custom/register_module.php');
     }
 
     private function removeFile($file_path)

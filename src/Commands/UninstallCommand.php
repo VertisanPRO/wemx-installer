@@ -34,7 +34,6 @@ class UninstallCommand extends Command
         ];
 
         exec('php artisan down');
-        exec('cd ' . base_path());
         exec('curl -L https://github.com/pterodactyl/panel/releases/latest/download/panel.tar.gz | tar -xzv');
         exec('chmod -R 755 storage/* bootstrap/cache');
         exec('echo \"yes\" | composer install --no-dev --optimize-autoloader');
