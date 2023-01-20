@@ -12,13 +12,15 @@ class LicenseCommand extends Command
 
     public function handle()
     {
-        if (file_exists('app/Models/Billing/Bill.php')) {
-            \Pterodactyl\Models\Billing\Bill::settings()->updateOrCreate(
-                ['name' => 'license_key'],
-                ['data' => $this->argument('lic_key')]
-            );
-            return $this->info('License save to DB ' . $this->argument('lic_key'));
+        if (!file_exists('app/Models/Billing/Bill.php')) {
+            return $this->info('Billing Module is not installed. To use this command, install the module');
         }
-        return $this->info('Billing Module is not installed. To use this command, install the module');
+
+        \Pterodactyl\Models\Billing\Bill::settings()->updateOrCreate(
+            ['name' => 'license_key'],
+            ['data' => $this->argument('lic_key')]
+        );
+
+        return $this->info('License save to DB ' . $this->argument('lic_key'));
     }
 }
