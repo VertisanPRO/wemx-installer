@@ -3,7 +3,6 @@
 namespace Wemx\Installer\Commands;
 
 use Illuminate\Console\Command;
-use Wemx\Installer\Commands\CreateMySQLUser;
 
 class InstallphpMyAdmin extends Command
 {
@@ -107,8 +106,7 @@ class InstallphpMyAdmin extends Command
 
             return;
         }
-        $create = new CreateMySQLUser();
-        return $create->handle();
+        return $this->call('mysql:user:create');
     }
 
     public function rmrfdir($dir)
