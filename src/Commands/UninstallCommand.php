@@ -52,7 +52,7 @@ class UninstallCommand extends Command
         exec('php artisan queue:restart');
         exec('php artisan up');
         if ($installer == 0) {
-            exec('composer require wemx/installer');
+            exec('echo \"yes\" | composer require wemx/installer');
         }
 
         return $this->info('Uninstalled the Billing Module and installed a fresh new Pterodactyl Panel');
