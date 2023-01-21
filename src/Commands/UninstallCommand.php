@@ -43,9 +43,9 @@ class UninstallCommand extends Command
         exec('php artisan view:clear && php artisan config:clear');
         exec('php artisan migrate --seed --force');
 
-        @exec('chown -R www-data:www-data ' . base_path() . '/*');
-        @exec('chown -R nginx:nginx ' . base_path() . '/*');
-        @exec('chown -R apache:apache ' . base_path() . '/*');
+        exec('chown -R www-data:www-data ' . base_path() . '/* > /dev/null 2>&1 &');
+        exec('chown -R nginx:nginx ' . base_path() . '/* > /dev/null 2>&1 &');
+        exec('chown -R apache:apache ' . base_path() . '/* > /dev/null 2>&1 &');
         foreach ($commands as $value) {
             exec($value);
         }
