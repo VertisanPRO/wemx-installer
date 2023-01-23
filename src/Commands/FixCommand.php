@@ -14,6 +14,8 @@ class FixCommand extends Command
     {
         $this->removeFile('app/Console/Commands/BillingModule.php');
         $this->removeFile('routes/custom/register_module.php');
+        $this->removeFile('app/Http/Controllers/Billing/PayPalController.php');
+        $this->removeFile('app/Models/Billing/PayPal.php');
     }
 
     private function removeFile($file_path)
