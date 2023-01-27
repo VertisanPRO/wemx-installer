@@ -233,6 +233,9 @@ class InstallCommand extends Command
     }
 
     private static function editFile($file, $world, $text)
+    if (!file_exists($file)) {
+        return;
+    }
     {
         $file = new FileEditor($file);
         if (!$file->issetText($text)) {
