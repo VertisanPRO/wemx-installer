@@ -35,5 +35,9 @@ class CommandsServiceProvider extends ServiceProvider
             __DIR__ . '/../config/aliases.php',
             'app.aliases'
         );
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/wemx_backup.php',
+            'wemx_backup'
+        );
     }
 }
