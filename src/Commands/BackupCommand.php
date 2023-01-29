@@ -137,10 +137,6 @@ class BackupCommand extends Command
         }
     }
 
-
-
-
-
     private function createPanelBackup($name)
     {
         if (!file_exists($this->backup_directory)) {
@@ -158,7 +154,7 @@ class BackupCommand extends Command
             new \RecursiveDirectoryIterator($panel_directory),
             \RecursiveIteratorIterator::LEAVES_ONLY
         );
-
+        $this->info('Creating a panel backup...');
         foreach ($files as $name => $file) {
             if (!$file->isDir()) {
                 $filePath = $file->getRealPath();
@@ -173,21 +169,22 @@ class BackupCommand extends Command
         if (!file_exists($this->db_directory)) {
             mkdir($this->db_directory, 0777, true);
         }
+        $this->info('Creating a database backup...');
         $command = "mysqldump --user={$this->db_user} --password={$this->db_pass} --host={$this->db_host} {$this->db_name} > {$this->db_directory}/db-{$name}.sql";
         system($command);
     }
 
     private function restorePanelBackup($file)
     {
-        // Code to restore the backup
+        $file = $this->backup_directory . '/' . $file;
         if (file_exists($file)) {
             $zip = new \ZipArchive;
             if ($zip->open($file) === TRUE) {
                 $zip->extractTo($this->panel_directory);
                 $zip->close();
-                $this->info('Backup restored successfully!');
+                $this->info('The panel backup has been successfully restored!');
             } else {
-                $this->warn('Failed to restore backup.');
+                $this->warn('Failed to restore panel backup.');
             }
         } else {
             $this->warn("The backup file does not exist.");
@@ -196,15 +193,15 @@ class BackupCommand extends Command
 
     private function restoreDbBackup($file)
     {
+        $file = $this->db_directory . '/' . $file;
+        if (!file_exists($file)) {
+            $this->warn("Database backup not found: {$file}");
+            return;
+        }
         $command = "mysql --user={$this->db_user} --password={$this->db_pass} --host={$this->db_host} {$this->db_name} < {$this->db_directory}/{$file}";
         system($command);
+        $this->info('The database backup has been successfully restored!');
     }
-
-
-
-
-
-
 
     private function backupPrepare(\DirectoryIterator $backups)
     {
