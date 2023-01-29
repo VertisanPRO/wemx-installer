@@ -30,12 +30,16 @@ class BackupCommand extends Command
     {
         $this->panel_directory = base_path();
         $path = explode('/', $this->panel_directory);
-        $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/backups';
+        $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/pterodactyl-backups';
         $this->db_directory = $this->backup_directory . '/db';
         $this->db_user = env('DB_USERNAME', null);
         $this->db_pass = env('DB_PASSWORD', null);
         $this->db_host = env('DB_HOST', null);
         $this->db_name = env('DB_DATABASE', null);
+
+        $this->createDir($this->backup_directory);
+        $this->createDir($this->db_directory);
+
         $this->args['ACTIONS'] = $this->option('action') ?? $this->choice(
             'Choose an action',
             self::ACTIONS
@@ -217,5 +221,12 @@ class BackupCommand extends Command
             }
         }
         return $data;
+    }
+
+    private function createDir($path)
+    {
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
     }
 }
