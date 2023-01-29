@@ -33,9 +33,7 @@ class CommandsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/aliases.php',
-            'app.aliases'
-        );
+        $this->mergeConfigFrom(__DIR__ . '/../config/wemx_backup.php', 'wemx_backup');
+        $this->mergeConfigFrom(__DIR__ . '/../config/aliases.php', 'app.aliases');
     }
 }
