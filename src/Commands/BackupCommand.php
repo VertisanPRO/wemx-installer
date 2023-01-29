@@ -8,7 +8,7 @@ class BackupCommand extends Command
 {
 
     protected $signature = 'backup:
-    {action=create : create/list/restore}
+    {a=create : create/list/restore}
     {--type= : panel/db/all}';
     protected $description = 'Backup for Pterodactyl';
 
