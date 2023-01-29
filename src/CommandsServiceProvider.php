@@ -12,6 +12,7 @@ use Wemx\Installer\Commands\InstallphpMyAdmin;
 use Wemx\Installer\Commands\CreateMySQLUser;
 use Wemx\Installer\Commands\DeleteMySQLUser;
 use Wemx\Installer\Commands\LicenseCommand;
+use Wemx\Installer\Commands\BackupCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
