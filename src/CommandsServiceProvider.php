@@ -26,7 +26,6 @@ class CommandsServiceProvider extends ServiceProvider
         }
 
         $this->publishes([__DIR__ . '/../config/wemx_backup.php' => config_path('wemx_backup.php')], 'config');
-        exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
     }
 
     /**
@@ -36,5 +35,6 @@ class CommandsServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/wemx_backup.php', 'wemx_backup');
         $this->mergeConfigFrom(__DIR__ . '/../config/aliases.php', 'app.aliases');
+        exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
     }
 }
