@@ -183,7 +183,7 @@ class BackupCommand extends Command
         if (file_exists($file)) {
             $zip = new \ZipArchive;
             if ($zip->open($file) === TRUE) {
-                $zip->extractTo($this->backup_directory . '/test');
+                $zip->extractTo($this->panel_directory);
                 $zip->close();
                 $this->info('Backup restored successfully!');
             } else {
