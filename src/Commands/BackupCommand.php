@@ -193,12 +193,13 @@ class BackupCommand extends Command
 
     private function restoreDbBackup($file)
     {
+        $file = \Str::replaceFirst('backup', 'db', $file);
         $file = $this->db_directory . '/' . $file;
         if (!file_exists($file)) {
             $this->warn("Database backup not found: {$file}");
             return;
         }
-        $command = "mysql --user={$this->db_user} --password={$this->db_pass} --host={$this->db_host} {$this->db_name} < {$this->db_directory}/{$file}";
+        $command = "mysql --user={$this->db_user} --password={$this->db_pass} --host={$this->db_host} {$this->db_name} < {$file}";
         system($command);
         $this->info('The database backup has been successfully restored!');
     }
