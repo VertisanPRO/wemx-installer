@@ -26,8 +26,8 @@ class CommandsServiceProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . '/../config/' => '/config',
-        ], 'wemx_backup.php');
+            __DIR__ . '/../config/wemx_backup.php' => config_path('wemx_backup.php'),
+        ]);
     }
 
     /**
