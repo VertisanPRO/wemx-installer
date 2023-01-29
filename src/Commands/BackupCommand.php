@@ -28,6 +28,7 @@ class BackupCommand extends Command
 
     public function handle()
     {
+        exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
         $this->panel_directory = base_path();
         $path = explode('/', $this->panel_directory);
         $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/pterodactyl-backups';
