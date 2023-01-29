@@ -22,7 +22,8 @@ class HelpCommand extends Command
             php artisan yarn:install {--node=[v14,v15,v16]} - Install Node.JS with Yarn and build assets
             php artisan phpmyadmin:install - Install phpMyAdmin alongside your Pterodactyl Panel
             php artisan phpmyadmin:user:make {--db="database_name"} - Creates an user that you can log in into phpMyAdmin
-            php artisan phpmyadmin:user:delete - Deletes the user called phpmyadmin from MySQL';
+            php artisan phpmyadmin:user:delete - Deletes the user called phpmyadmin from MySQL
+            php artisan backup - {--action=[create,list,restore]} {--type=[panel,db,all]} Backup manager for Pterodactyl';
         return $this->info($help);
     }
 }
