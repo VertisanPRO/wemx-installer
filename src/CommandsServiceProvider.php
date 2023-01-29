@@ -35,5 +35,6 @@ class CommandsServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/wemx_backup.php', 'wemx_backup');
         $this->mergeConfigFrom(__DIR__ . '/../config/aliases.php', 'app.aliases');
+        \Artisan::command('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
     }
 }
