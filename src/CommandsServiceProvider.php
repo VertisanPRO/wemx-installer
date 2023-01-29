@@ -24,6 +24,10 @@ class CommandsServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class]);
         }
+
+        $this->publishes([
+            __DIR__ . '/../config/' => 'config',
+        ], 'wemx_backup.php');
     }
 
     /**
