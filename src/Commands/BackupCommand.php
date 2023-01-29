@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 class BackupCommand extends Command
 {
 
-    protected $signature = 'w:backup {--action= : create/list/restore} {--type= : panel/db/all}';
+    protected $signature = 'backup {--action= : create/list/restore} {--type= : panel/db/all}';
     protected $description = 'Backup manager for Pterodactyl';
 
     public const ACTIONS = [
@@ -17,9 +17,9 @@ class BackupCommand extends Command
     ];
 
     public const TYPE = [
-        'panel' => 'Back up only panel files',
-        'db' => 'Backup only the argsbase',
-        'all' => 'Create a backup panel and argsbase'
+        'panel' => 'Only panel files',
+        'db' => 'Only the database',
+        'all' => 'All panel and database'
     ];
 
     private string $panel_directory, $backup_directory, $db_directory, $db_user, $db_pass, $db_host, $db_name;
@@ -178,6 +178,7 @@ class BackupCommand extends Command
     {
         $file = $this->backup_directory . '/' . $file;
         if (file_exists($file)) {
+            $this->info('Restore a panel backup...');
             $zip = new \ZipArchive;
             if ($zip->open($file) === TRUE) {
                 $zip->extractTo($this->panel_directory);
@@ -199,6 +200,7 @@ class BackupCommand extends Command
             $this->warn("Database backup not found: {$file}");
             return;
         }
+        $this->info('Restore a database backup...');
         $command = "mysql --user={$this->db_user} --password={$this->db_pass} --host={$this->db_host} {$this->db_name} < {$file}";
         system($command);
         $this->info('The database backup has been successfully restored!');
