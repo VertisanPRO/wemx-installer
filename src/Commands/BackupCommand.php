@@ -28,10 +28,18 @@ class BackupCommand extends Command
 
     public function handle()
     {
-        exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
+        if (!file_exists(config_path('wemx_backup.php'))) {
+            exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
+        }
+
         $this->panel_directory = base_path();
-        $path = explode('/', $this->panel_directory);
-        $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/pterodactyl-backups';
+        if (!empty(\Config::get('wemx_backup.backup_directory'))) {
+            $this->backup_directory = \Config::get('wemx_backup.backup_directory');
+        } else {
+            $path = explode('/', $this->panel_directory);
+            $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/pterodactyl-backups';
+        }
+
         $this->db_directory = $this->backup_directory . '/db';
         $this->db_user = env('DB_USERNAME', null);
         $this->db_pass = env('DB_PASSWORD', null);
