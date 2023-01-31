@@ -2,6 +2,7 @@
 
 namespace Wemx\Installer;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\BackupCommand;
 use Wemx\Installer\Commands\CreateMySQLUser;
@@ -29,6 +30,13 @@ class CommandsServiceProvider extends ServiceProvider
         }
 
         $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');
+
+        if (config('wemx-backup.autobackup')) {
+            $this->callAfterResolving(Schedule::class, function (Schedule $schedule) {
+                $schedule->command('backup --action=create --type=all')->cron(config('wemx-backup.autobackup_cron'));
+            });
+
+        }
     }
 
     /**

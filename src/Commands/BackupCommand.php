@@ -19,10 +19,10 @@ class BackupCommand extends Command
     public const TYPE = [
         'panel' => 'Only panel files',
         'db' => 'Only the database',
-        'all' => 'All panel and database'
+        'all' => 'All panel and database',
     ];
 
-    private string $panel_directory, $backup_directory, $db_directory, $db_user, $db_pass, $db_host, $db_name;
+    private $panel_directory, $backup_directory, $db_directory, $db_user, $db_pass, $db_host, $db_name;
 
     public $args = [];
 
@@ -156,7 +156,6 @@ class BackupCommand extends Command
             mkdir($this->backup_directory, 0777, true);
         }
 
-
         $backup_file = $this->backup_directory . '/backup-' . $name . '.zip';
         $panel_directory = $this->panel_directory;
 
@@ -193,7 +192,7 @@ class BackupCommand extends Command
         if (file_exists($file)) {
             $this->info('Restore a panel backup...');
             $zip = new \ZipArchive;
-            if ($zip->open($file) === TRUE) {
+            if ($zip->open($file) === true) {
                 $zip->extractTo($this->panel_directory);
                 $zip->close();
                 $this->info('The panel backup has been successfully restored!');
@@ -219,7 +218,7 @@ class BackupCommand extends Command
         $this->info('The database backup has been successfully restored!');
     }
 
-    private function backupPrepare(\DirectoryIterator $backups)
+    private function backupPrepare(\DirectoryIterator$backups)
     {
         $data = [];
         foreach ($backups as $fileinfo) {
