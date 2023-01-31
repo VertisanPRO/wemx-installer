@@ -42,7 +42,12 @@
             }
         }
     },
-    "post-update-cmd": [
-        "php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
-    ]
+    "scripts": {
+        "post-package-install": [
+            "php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
+        ],
+        "post-package-update": [
+            "php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
+        ]
+    }
 }
