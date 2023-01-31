@@ -16,6 +16,8 @@ use Wemx\Installer\Commands\BackupCommand;
 
 class CommandsServiceProvider extends ServiceProvider
 {
+
+    private $wemx_backup;
     /**
      * Bootstrap the application services.
      */
@@ -25,7 +27,7 @@ class CommandsServiceProvider extends ServiceProvider
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class]);
         }
 
-        $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');
+        $this->publishes([$this->mergeConfig() => config_path('wemx-backup.php')], 'wemx-backup');
     }
 
     /**
@@ -33,7 +35,21 @@ class CommandsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/wemx-backup.php', 'wemx-backup');
         $this->mergeConfigFrom(__DIR__ . '/../config/aliases.php', 'app.aliases');
+    }
+
+
+
+    private function mergeConfig()
+    {
+        $this->wemx_backup = include(__DIR__ . '/../config/wemx-backup.php');
+        $wemx_backup = config('wemx-backup');
+        foreach ($this->wemx_backup as $key => $value) {
+            if (isset($wemx_backup[$key])) {
+                continue;
+            }
+            $wemx_backup[$key] = $value;
+        }
+        return $wemx_backup;
     }
 }
