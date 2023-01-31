@@ -25,7 +25,7 @@ class CommandsServiceProvider extends ServiceProvider
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class]);
         }
 
-        $this->publishes([__DIR__ . '/../config/wemx_backup.php' => config_path('wemx_backup.php')], 'config');
+        $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'config');
     }
 
     /**
@@ -33,7 +33,7 @@ class CommandsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/wemx_backup.php', 'wemx_backup');
+        // $this->mergeConfigFrom(__DIR__ . '/../config/wemx-backup.php', 'wemx-backup');
         $this->mergeConfigFrom(__DIR__ . '/../config/aliases.php', 'app.aliases');
     }
 }

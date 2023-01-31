@@ -41,5 +41,8 @@
                 "BFileEditor": "Wemx\\Installer\\FileEditor"
             }
         }
-    }
+    },
+    "post-update-cmd": [
+        "php artisan vendor:publish --provider='Wemx\\Installer\\CommandsServiceProvider' --tag=wemx-backup --force"
+    ]
 }
