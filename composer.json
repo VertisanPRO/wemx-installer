@@ -44,10 +44,14 @@
     },
     "scripts": {
         "post-package-install": [
-            "php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
+            "@php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
         ],
         "post-package-update": [
-            "php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
+            "@php artisan vendor:publish --provider=\"Wemx\\Installer\\CommandsServiceProvider\" --force"
+        ],
+        "post-autoload-dump": [
+            "@php artisan vendor:publish --tag={tagNameHere}--force"
         ]
-    }
+    },
+}
 }
