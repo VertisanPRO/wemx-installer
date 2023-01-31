@@ -28,9 +28,9 @@ class BackupCommand extends Command
 
     public function handle()
     {
-        if (!file_exists(config_path('wemx_backup.php'))) {
-            exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
-        }
+        // if (!file_exists(config_path('wemx_backup.php'))) {
+        exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider"');
+        // }
 
         $this->panel_directory = base_path();
         if (!empty(\Config::get('wemx_backup.backup_directory'))) {
