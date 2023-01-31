@@ -13,6 +13,7 @@ use Wemx\Installer\Commands\CreateMySQLUser;
 use Wemx\Installer\Commands\DeleteMySQLUser;
 use Wemx\Installer\Commands\LicenseCommand;
 use Wemx\Installer\Commands\BackupCommand;
+use Wemx\Installer\FileEditor;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -27,7 +28,8 @@ class CommandsServiceProvider extends ServiceProvider
             $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class]);
         }
 
-        $this->publishes([$this->mergeConfig() => config_path('wemx-backup.php')], 'wemx-backup');
+        $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');
+        $this->mergeConfig();
     }
 
     /**
@@ -50,6 +52,8 @@ class CommandsServiceProvider extends ServiceProvider
             }
             $wemx_backup[$key] = $value;
         }
-        return $wemx_backup;
+        $file = new FileEditor(config_path('wemx-backup.php'));
+        $file->writeToFile($wemx_backup);
+        return;
     }
 }

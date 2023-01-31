@@ -28,13 +28,13 @@ class BackupCommand extends Command
 
     public function handle()
     {
-        if (!file_exists(config_path('wemx_backup.php'))) {
+        if (!file_exists(config_path('wemx-backup.php'))) {
             exec('php artisan vendor:publish --provider="Wemx\Installer\CommandsServiceProvider" --force');
         }
 
         $this->panel_directory = base_path();
-        if (!empty(\Config::get('wemx_backup.backup_directory'))) {
-            $this->backup_directory = \Config::get('wemx_backup.backup_directory');
+        if (!empty(\Config::get('wemx-backup.backup_directory'))) {
+            $this->backup_directory = \Config::get('wemx-backup.backup_directory');
         } else {
             $path = explode('/', $this->panel_directory);
             $this->backup_directory = implode('/', array_splice($path, 0, -1)) . '/pterodactyl-backups';
