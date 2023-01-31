@@ -2,4 +2,5 @@
 
 return [
     'backup_directory' => '',
+    'autobackup' => false,
 ];
