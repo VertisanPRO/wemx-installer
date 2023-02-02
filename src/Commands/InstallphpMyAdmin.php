@@ -69,7 +69,7 @@ class InstallphpMyAdmin extends Command
             $lines = explode("\n", $file_contents);
             array_pop($lines);
             array_push($lines, "");
-            array_push($lines, "    location /path {");
+            array_push($lines, "    location /phpmyadmin {");
             array_push($lines, "        root /var/www/phpmyadmin;");
             array_push($lines, "        index index.php;");
             array_push($lines, "    }");
