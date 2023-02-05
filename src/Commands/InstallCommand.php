@@ -218,8 +218,8 @@ class InstallCommand extends Command
 
     private function setupCron()
     {
-        $schedular = exec("crontab -l | grep -q '" + config('app.url') + "/billing/scheduler'  && echo 'true' || echo 'false'");
-        $version = exec("crontab -l | grep -q '" + base_path() + "check_version'  && echo 'true' || echo 'false'");
+        $schedular = exec("crontab -l | grep -q '" . config('app.url') . "/billing/scheduler'  && echo 'true' || echo 'false'");
+        $version = exec("crontab -l | grep -q '" . base_path() . "check_version'  && echo 'true' || echo 'false'");
         if (isset($schedular) and $schedular == 'false') {
             $this->infoNewLine("Setup scheduler Cron");
             exec('(crontab -l ; echo "0 0 * * * curl ' . config('app.url') . '/billing/scheduler") | sort - | uniq - | crontab -');
