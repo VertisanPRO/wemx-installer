@@ -23,8 +23,8 @@ class YarnCommand extends Command
             'What Node.JS Version you want to install?',
             self::NODE_VERSIONS
         );
-        $output = [];
-        exec("dpkg -s curl", $output, $return_var);
+        $output = array();
+        exec("node -v", $output, $return_var);
         if ($return_var === 0) {
             if (!$this->confirm('You already have Node.JS installed, would you like to remove it?')) {
                 $this->warn('Node.JS was not removed');
