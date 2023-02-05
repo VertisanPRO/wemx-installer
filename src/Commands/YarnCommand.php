@@ -31,6 +31,7 @@ class YarnCommand extends Command
 
                 return;
             }
+            exec("apt remove nodejs -y");
             $this->handle();
         } else {
             $node_version = substr($this->variables['NODE_VERSIONS'], 1);
