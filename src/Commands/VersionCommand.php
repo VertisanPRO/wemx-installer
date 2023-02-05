@@ -1,6 +1,6 @@
 <?php
 
-namespace Billing\Commands\Commands;
+namespace Wemx\Installer\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
