@@ -5,7 +5,7 @@ namespace Billing\Commands\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
-class CheckVersionCommand extends Command
+class VersionCommand extends Command
 {
 
     protected $signature = 'billing:check_version';
