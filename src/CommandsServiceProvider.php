@@ -30,16 +30,16 @@ class CommandsServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 HelpCommand::class,
-                UninstallCommand::class, 
-                FixCommand::class, 
-                YarnCommand::class, 
-                InstallphpMyAdmin::class, 
-                CreateMySQLUser::class, 
-                DeleteMySQLUser::class, 
-                LicenseCommand::class, 
-                BackupCommand::class, 
+                UninstallCommand::class,
+                FixCommand::class,
+                YarnCommand::class,
+                InstallphpMyAdmin::class,
+                CreateMySQLUser::class,
+                DeleteMySQLUser::class,
+                LicenseCommand::class,
+                BackupCommand::class,
                 VersionCommand::class
-              ]);
+            ]);
         }
 
         $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');

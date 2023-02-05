@@ -164,7 +164,7 @@ class BackupCommand extends Command
 
         $files = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($panel_directory),
-            \RecursiveIteratorIterator::LEAVES_ONLY
+                \RecursiveIteratorIterator::LEAVES_ONLY
         );
         $this->info('Creating a panel backup...');
         foreach ($files as $name => $file) {
@@ -218,7 +218,7 @@ class BackupCommand extends Command
         $this->info('The database backup has been successfully restored!');
     }
 
-    private function backupPrepare(\DirectoryIterator$backups)
+    private function backupPrepare(\DirectoryIterator $backups)
     {
         $data = [];
         foreach ($backups as $fileinfo) {

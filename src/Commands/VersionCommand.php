@@ -13,7 +13,7 @@ class VersionCommand extends Command
 
     public function handle()
     {
-        if (!file_exists(base_path() . '/app/Console/Commands/BillingModule.php')) {
+        if (!file_exists('app/Models/Billing/Bill.php')) {
             return $this->info('Billing Module is not installed. To use this command, install the module');
         }
 

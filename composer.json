@@ -1,56 +1,56 @@
 {
-	"name": "wemx/installer",
-	"minimum-stability": "stable",
-	"prefer-stable": true,
-	"description": "WemX Installer",
-	"homepage": "https://wemx.net",
-	"license": "MIT",
-	"type": "library",
-	"authors": [
-		{
-			"name": "GIGABAIT",
-			"email": "xgigabaitx@gmail.com",
-			"role": "Head Developer"
-		},
-		{
-			"name": "PadowYT2",
-			"email": "me@padow.ru",
-			"role": "Developer"
-		}
-	],
-	"autoload": {
-		"psr-4": {
-			"Wemx\\Installer\\": "src"
-		}
-	},
-	"require": {
-		"awsc/awsc-send-sdk": "*",
-		"stripe/stripe-php": "*",
-		"cloudflare/sdk": "*"
-	},
-	"config": {
-		"sort-packages": true
-	},
-	"extra": {
-		"laravel": {
-			"providers": [
-				"Wemx\\Installer\\CommandsServiceProvider"
-			],
-			"aliases": {
-				"Bill": "Pterodactyl\\Models\\Billing\\Bill",
-				"BFileEditor": "Wemx\\Installer\\FileEditor"
-			}
-		}
-	},
-	"scripts": {
-		"post-package-install": [
-			"php artisan vendor:publish --tag=wemx-backup --force"
-		],
-		"post-package-update": [
-			"php artisan vendor:publish --tag=wemx-backup --force"
-		],
-		"post-autoload-dump": [
-			"php artisan vendor:publish --tag=wemx-backup --force"
-		]
-	}
+    "name": "wemx/installer",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "description": "WemX Installer",
+    "homepage": "https://wemx.net",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "GIGABAIT",
+            "email": "xgigabaitx@gmail.com",
+            "role": "Head Developer"
+        },
+        {
+            "name": "PadowYT2",
+            "email": "me@padow.ru",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wemx\\Installer\\": "src"
+        }
+    },
+    "require": {
+        "awsc/awsc-send-sdk": "*",
+        "stripe/stripe-php": "*",
+        "cloudflare/sdk": "*"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wemx\\Installer\\CommandsServiceProvider"
+            ],
+            "aliases": {
+                "Bill": "Pterodactyl\\Models\\Billing\\Bill",
+                "BFileEditor": "Wemx\\Installer\\FileEditor"
+            }
+        }
+    },
+    "scripts": {
+        "post-package-install": [
+            "php artisan vendor:publish --tag=wemx-backup --force"
+        ],
+        "post-package-update": [
+            "php artisan vendor:publish --tag=wemx-backup --force"
+        ],
+        "post-autoload-dump": [
+            "php artisan vendor:publish --tag=wemx-backup --force"
+        ]
+    }
 }
