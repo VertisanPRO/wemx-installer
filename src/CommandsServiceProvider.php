@@ -14,7 +14,7 @@ use Wemx\Installer\Commands\InstallphpMyAdmin;
 use Wemx\Installer\Commands\LicenseCommand;
 use Wemx\Installer\Commands\UninstallCommand;
 use Wemx\Installer\Commands\YarnCommand;
-// use Wemx\Installer\Commands\CheckVersionCommand;
+use Wemx\Installer\Commands\VersionCommand;
 use Wemx\Installer\FileEditor;
 
 class CommandsServiceProvider extends ServiceProvider
@@ -27,8 +27,7 @@ class CommandsServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            // $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class, CheckVersionCommand::class]);
-            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class]);
+            $this->commands([InstallCommand::class, HelpCommand::class, UninstallCommand::class, FixCommand::class, YarnCommand::class, InstallphpMyAdmin::class, CreateMySQLUser::class, DeleteMySQLUser::class, LicenseCommand::class, BackupCommand::class, VersionCommand::class]);
         }
 
         $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');
