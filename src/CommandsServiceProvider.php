@@ -44,13 +44,13 @@ class CommandsServiceProvider extends ServiceProvider
 
         $this->publishes([__DIR__ . '/../config/wemx-backup.php' => config_path('wemx-backup.php')], 'wemx-backup');
 
-        if (config('wemx-backup.autobackup')) {
-            $this->app->booted(function () {
-                $schedule = app(Schedule::class);
-                $schedule->command('backup --action=create --type=all')->cron(config('wemx-backup.autobackup_cron'));
+        // if (config('wemx-backup.autobackup')) {
+        //     $this->app->booted(function () {
+        //         $schedule = app(Schedule::class);
+        //         $schedule->command('backup --action=create --type=all')->cron(config('wemx-backup.autobackup_cron'));
 
-            });
-        }
+        //     });
+        // }
     }
 
     /**
