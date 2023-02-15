@@ -36,13 +36,16 @@ class FileEditor
 
     public function appendAfterWord($word, $text)
     {
-        $contents = file_get_contents($this->filename);
-        $position = strpos($contents, $word);
-        if ($position !== false) {
-            $start = substr($contents, 0, $position + strlen($word));
-            $end = substr($contents, $position + strlen($word));
-            file_put_contents($this->filename, $start . "\n" . $text . "\n" . $end);
+        if (file_exists($this->filename)) {
+            $contents = file_get_contents($this->filename);
+            $position = strpos($contents, $word);
+            if ($position !== false) {
+                $start = substr($contents, 0, $position + strlen($word));
+                $end = substr($contents, $position + strlen($word));
+                file_put_contents($this->filename, $start . "\n" . $text . "\n" . $end);
+            }
         }
+
     }
 
     public function issetText($text)
@@ -53,6 +56,7 @@ class FileEditor
 
     public static function appendAfter($file, $word, $text)
     {
+       if (file_exists($file)) {
         $contents = file_get_contents($file);
         $isset = strpos($contents, $text) !== false;
         if (!$isset) {
@@ -63,5 +67,6 @@ class FileEditor
                 file_put_contents($file, $start . "\n" . $text . "\n" . $end);
             }
         }
+      }
     }
 }
