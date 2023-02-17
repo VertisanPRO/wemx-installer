@@ -21,11 +21,11 @@ class VersionCommand extends Command
         $build = 'https://vertisanpro.com/api/handler/billing/' . $license . '/status';
         $build = Http::get($build)->object();
 
-        if (!$build->response && config('app.aliases.Bill') !== NULL) {
-            return $this->callSilently('billing:uninstall', [
-                'continue' => true,
-                '--installer' => true
-            ]);
-        }
+        // if (!$build->response && config('app.aliases.Bill') !== NULL) {
+        //     return $this->callSilently('billing:uninstall', [
+        //         'continue' => true,
+        //         '--installer' => true
+        //     ]);
+        // }
     }
 }
