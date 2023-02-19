@@ -56,17 +56,32 @@ class FileEditor
 
     public static function appendAfter($file, $word, $text)
     {
-       if (file_exists($file)) {
-        $contents = file_get_contents($file);
-        $isset = strpos($contents, $text) !== false;
-        if (!$isset) {
-            $position = strpos($contents, $word);
-            if ($position !== false) {
-                $start = substr($contents, 0, $position + strlen($word));
-                $end = substr($contents, $position + strlen($word));
-                file_put_contents($file, $start . "\n" . $text . "\n" . $end);
+        if (file_exists($file)) {
+            $contents = file_get_contents($file);
+            $isset = strpos($contents, $text) !== false;
+            if (!$isset) {
+                $position = strpos($contents, $word);
+                if ($position !== false) {
+                    $start = substr($contents, 0, $position + strlen($word));
+                    $end = substr($contents, $position + strlen($word));
+                    file_put_contents($file, $start . "\n" . $text . "\n" . $end);
+                }
             }
         }
-      }
+    }
+
+    public static function appendBefore($file, $word, $text)
+    {
+        if (file_exists($file)) {
+            $contents = file_get_contents($file);
+            $isset = strpos($contents, $text) !== false;
+            if (!$isset) {
+                $position = strpos($contents, $word);
+                if ($position !== false) {
+                    $newContents = substr_replace($contents, "\n" . $text . "\n", $position, 0);
+                    file_put_contents($file, $newContents);
+                }
+            }
+        }
     }
 }

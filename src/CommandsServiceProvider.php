@@ -15,6 +15,7 @@ use Wemx\Installer\Commands\LicenseCommand;
 use Wemx\Installer\Commands\UninstallCommand;
 use Wemx\Installer\Commands\VersionCommand;
 use Wemx\Installer\Commands\YarnCommand;
+use Wemx\Installer\Commands\LangCommand;
 use Wemx\Installer\FileEditor;
 
 class CommandsServiceProvider extends ServiceProvider
@@ -38,7 +39,8 @@ class CommandsServiceProvider extends ServiceProvider
                 DeleteMySQLUser::class,
                 LicenseCommand::class,
                 BackupCommand::class,
-                VersionCommand::class
+                VersionCommand::class,
+                LangCommand::class
             ]);
         }
 
