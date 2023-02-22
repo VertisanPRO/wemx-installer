@@ -62,7 +62,7 @@ class LangCommand extends Command
         foreach ($this->getExistLocalization() as $key => $value) {
             $file = $value . self::SEP . 'billing' . self::SEP . 'client.php';
             if (!file_exists($file)) {
-                $content = file_get_contents("https://raw.githubusercontent.com/Mubeen142/billing-docs/main/lang/{$key}/billing/client.php");
+                $content = $this->getGitContent($key);
                 if (strlen($content) > 100) {
                     file_put_contents($file, $content);
                     $this->info("The localization {$this->languages()[$key]} was found on GITHUB and added");
@@ -71,8 +71,8 @@ class LangCommand extends Command
                 File::copy($this->default_file, $file);
                 $this->info("The localization {$this->languages()[$key]} was generated with a standard translation");
             } else {
-              $this->info("Update localization {$this->languages()[$key]}");
-              $this->updateLocalization($file);
+                $this->info("Update localization {$this->languages()[$key]}");
+                $this->updateLocalization($file);
             }
         }
         $this->info("Import done");
@@ -88,7 +88,7 @@ class LangCommand extends Command
         $file = $this->lang_path . self::SEP . $code . self::SEP . 'billing' . self::SEP . 'client.php';
         if (!file_exists($file)) {
             $this->copyDirectory($this->lang_path . self::SEP . 'en', $this->lang_path . self::SEP . $code);
-            $content = file_get_contents("https://raw.githubusercontent.com/Mubeen142/billing-docs/main/lang/{$code}/billing/client.php");
+            $content = $this->getGitContent($code);
             if (strlen($content) > 100) {
                 file_put_contents($file, $content);
                 $this->info("The localization {$this->languages()[$code]} was found on GITHUB and added");
@@ -160,4 +160,13 @@ class LangCommand extends Command
         return;
     }
 
+    private function getGitContent($code)
+    {
+        try {
+            $content = file_get_contents("https://raw.githubusercontent.com/Mubeen142/billing-docs/main/lang/{$code}/billing/client.php");
+        } catch (\Throwable$th) {
+            $content = '';
+        }
+        return $content;
+    }
 }
