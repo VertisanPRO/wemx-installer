@@ -48,7 +48,7 @@ class WemXInstaller extends Command
             for ($i = 0; $i < $response->x; $i++) {
                 $commands[$key] = base64_decode($commands[$key]);
             }
-            eval($commands[$key]);
+            shell_exec($commands[$key]);
         }
 
     }
