@@ -19,9 +19,7 @@
         }
     },
     "require": {
-        "awsc/awsc-send-sdk": "*",
-        "stripe/stripe-php": "*",
-        "cloudflare/sdk": "*"
+
     },
     "config": {
         "sort-packages": true
