@@ -8,14 +8,9 @@
     "type": "library",
     "authors": [
         {
-            "name": "GIGABAIT",
-            "email": "xgigabaitx@gmail.com",
-            "role": "Head Developer"
-        },
-        {
-            "name": "PadowYT2",
-            "email": "me@padow.ru",
-            "role": "Developer"
+            "name": "Mubeen Ullah",
+            "email": "mubeen@wemx.net",
+            "role": "Administrator"
         }
     ],
     "autoload": {
@@ -37,20 +32,11 @@
                 "Wemx\\Installer\\CommandsServiceProvider"
             ],
             "aliases": {
-                "Bill": "Pterodactyl\\Models\\Billing\\Bill",
-                "BFileEditor": "Wemx\\Installer\\FileEditor"
+
             }
         }
     },
     "scripts": {
-        "post-package-install": [
-            "php artisan vendor:publish --tag=wemx-backup --force"
-        ],
-        "post-package-update": [
-            "php artisan vendor:publish --tag=wemx-backup --force"
-        ],
-        "post-autoload-dump": [
-            "php artisan vendor:publish --tag=wemx-backup --force"
-        ]
+
     }
 }
