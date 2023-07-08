@@ -39,7 +39,7 @@ class WemXInstaller extends Command
         $license_key = $this->ask("Please enter your license key", 'cancel');
 
         $this->info('Attempting to connect to WemX...');         
-        $response = Http::get("https://pro.wemx.net/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=")->object();
+        $response = Http::get("https://api.wemx.pro/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=")->object();
         
         $this->info('Connected');
 
