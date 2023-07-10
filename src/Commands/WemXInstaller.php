@@ -31,7 +31,6 @@ class WemXInstaller extends Command
         |||     WemX™ © 2023 Installer     |||
         |||           By Mubeen            |||
         ======================================
-        By continuing you agree to our EULA: https://wemx.net/license/
         ");
 
         $this->sshUser();
@@ -39,14 +38,23 @@ class WemXInstaller extends Command
         $license_key = $this->ask("Please enter your license key", 'cancel');
 
         $this->info('Attempting to connect to WemX...');         
-        $response = Http::get("https://api.wemx.pro/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=")->object();
+        $response = Http::get("https://api.wemx.pro/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=");
         
         $this->info('Connected');
 
-        if(!$response->success) {
-            return $this->error($response->message);
+        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
+            return $this->error('You must agree to our EULA to continue');
         }
 
+        if(!$response->successful()) {
+            if(isset($response['success']) AND !$response['success']) {
+                return $this->error($response->message);
+            }
+
+            return $this->error('Failed to connect to remote server, please try again.');
+        }
+
+        $response = $response->object();
         $this->info('Proceeding with installation...');
         $commands = $response->commands;
         foreach($response->commands as $key => $command) {
