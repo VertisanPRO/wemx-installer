@@ -44,7 +44,7 @@ class WemXInstaller extends Command
 
         if(!$response->successful()) {
             if(isset($response['success']) AND !$response['success']) {
-                return $this->error($response->message);
+                return $this->error($response['message']);
             }
 
             return $this->error('Failed to connect to remote server, please try again.');
