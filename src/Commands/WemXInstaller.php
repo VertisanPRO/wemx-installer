@@ -42,16 +42,16 @@ class WemXInstaller extends Command
         
         $this->info('Connected');
 
-        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
-            return $this->error('You must agree to our EULA to continue');
-        }
-
         if(!$response->successful()) {
             if(isset($response['success']) AND !$response['success']) {
                 return $this->error($response->message);
             }
 
             return $this->error('Failed to connect to remote server, please try again.');
+        }
+
+        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
+            return $this->error('You must agree to our EULA to continue');
         }
 
         $response = $response->object();
