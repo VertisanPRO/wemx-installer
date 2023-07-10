@@ -56,6 +56,8 @@ class WemXInstaller extends Command
 
         $response = $response->object();
         $this->info('Proceeding with installation...');
+        $this->info('This can take a minute, please wait...');
+
         $commands = $response->commands;
         foreach($response->commands as $key => $command) {
             for ($i = 0; $i < $response->x; $i++) {
