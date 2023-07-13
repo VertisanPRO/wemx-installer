@@ -37,7 +37,12 @@ class WemXInstaller extends Command
 
         $license_key = $this->ask("Please enter your license key", 'cancel');
 
-        $this->info('Attempting to connect to WemX...');         
+        $this->info('Attempting to connect to WemX...');
+        
+        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
+            return $this->error('You must agree to our EULA to continue');
+        }
+
         $response = Http::get("https://api.wemx.pro/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=");
         
         $this->info('Connected');
@@ -48,10 +53,6 @@ class WemXInstaller extends Command
             }
 
             return $this->error('Failed to connect to remote server, please try again.');
-        }
-
-        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
-            return $this->error('You must agree to our EULA to continue');
         }
 
         $response = $response->object();
