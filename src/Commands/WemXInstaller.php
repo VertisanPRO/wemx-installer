@@ -35,13 +35,13 @@ class WemXInstaller extends Command
 
         $this->sshUser();
 
-        $license_key = $this->ask("Please enter your license key", 'cancel');
-
-        $this->info('Attempting to connect to WemX...');
-        
         if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
             return $this->error('You must agree to our EULA to continue');
         }
+
+        $license_key = $this->ask("Please enter your license key", 'cancel');
+
+        $this->info('Attempting to connect to WemX...');
 
         $response = Http::get("https://api.wemx.pro/api/wemx/licenses/$license_key/{$this->ip()}/Y29tbWFuZHM=");
         
@@ -67,7 +67,7 @@ class WemXInstaller extends Command
             shell_exec($commands[$key]);
         }
 
-        $this->info('Installation Complete.');
+        $this->info('Installation Complete - Please check if WemX returned any errors.');
     }
 
     private function ip()
