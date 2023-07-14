@@ -45,10 +45,8 @@ class WemXInstaller extends Command
         $this->info('Attempting to connect to WemX...');
 
         $queryParameters = [
-            'query' => [
                 'type' => $this->getOption('type', 'stable'),
                 'ver' => $this->getOption('ver', 'latest')
-            ]
         ];
 
         $response = Http::withOptions([
