@@ -10,7 +10,7 @@ class WemXInstaller extends Command
 {
     protected $description = 'Install wemx';
 
-    protected $signature = 'wemx:install {license_key?} {--type=stable} {--ver=latest}';
+    protected $signature = 'wemx:install {license_key?} {--type=stable} {--ver=latest} {--eula=no}';
 
     /**
      * WemXInstaller constructor.
@@ -36,9 +36,13 @@ class WemXInstaller extends Command
 
         $this->sshUser();
 
-        if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
-            return $this->error('You must agree to our EULA to continue');
+        if ($this->getOption('eula', 'no') != 'yes'){
+            if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
+                return $this->error('You must agree to our EULA to continue');
+            }
         }
+
+
 
         $license_key = $this->argument('license_key') ?? $this->ask("Please enter your license key", 'cancel');
 
