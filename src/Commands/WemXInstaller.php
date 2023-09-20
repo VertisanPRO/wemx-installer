@@ -37,7 +37,7 @@ class WemXInstaller extends Command
         $this->sshUser();
 
         if ($this->getOption('eula', 'no') != 'yes'){
-            if (!$this->confirm('I have read wemx.net/license (EULA) and accept the terms', false)) {
+            if (!$this->confirm('I have read https://wemx.net/pages/eula (EULA) and accept the terms', false)) {
                 return $this->error('You must agree to our EULA to continue');
             }
         }
