@@ -12,5 +12,5 @@ composer require wemx/installer
 
 ## Credits
 
-- [GIGABAIT](https://github.com/billing)
+- [GIGABAIT](https://github.com/GIGABAIT93)
 - [All Contributors](../../contributors)
