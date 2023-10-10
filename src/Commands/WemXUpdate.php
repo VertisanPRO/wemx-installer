@@ -54,10 +54,11 @@ class WemXUpdate extends Command
 
         if (!$response->successful()) {
             if (isset($response['success']) and !$response['success']) {
+                $this->updateProgress('Update Failed:'. $response['message'], 3);
                 return $this->error($response['message']);
             }
             
-            $this->updateProgress('Failed to connect to remote server, please try again.');
+            $this->updateProgress('Failed to connect to remote server, please try again.', 3);
             return $this->error('Failed to connect to remote server, please try again.');
         }
 
@@ -123,6 +124,7 @@ class WemXUpdate extends Command
     {
         $SshUser = exec('whoami');
         if (isset($SshUser) and $SshUser !== "root") {
+            $this->updateProgress('Update Failed: The updater requires root user permissions. Update the crontab as root user', 3);
             $this->error('
       We have detected that you are not logged in as a root user.
       To run the auto-updater, it is recommended to login as root user.
