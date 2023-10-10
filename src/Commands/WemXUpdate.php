@@ -5,6 +5,7 @@ namespace Wemx\Installer\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class WemXUpdate extends Command
 {
@@ -55,12 +56,16 @@ class WemXUpdate extends Command
             if (isset($response['success']) and !$response['success']) {
                 return $this->error($response['message']);
             }
+            
+            $this->updateProgress('Failed to connect to remote server, please try again.');
             return $this->error('Failed to connect to remote server, please try again.');
         }
 
         $response = $response->object();
-        $this->info('Proceeding with installation...');
+        $this->info('Proceeding with installation of update...');
         $this->info('This can take a minute, please wait...');
+
+        $this->updateProgress('Downloading latest assets');
 
         $commands = $response->commands;
         foreach ($response->commands as $key => $command) {
@@ -70,6 +75,7 @@ class WemXUpdate extends Command
             shell_exec($commands[$key]);
         }
 
+        $this->updateProgress('Unpacking files & Downloading dependencies');
         $this->info('Setting correct file permissions');
         shell_exec('chmod -R 755 storage/* bootstrap/cache');
 
@@ -77,12 +83,14 @@ class WemXUpdate extends Command
         shell_exec('composer update -n /dev/null 2>&1');
         shell_exec('composer install --optimize-autoloader -n /dev/null 2>&1');
 
+        $this->updateProgress('Clearing Cache & Optimizing application');
         $this->info('Enabling modules');
         shell_exec('php artisan module:enable');
 
         $this->info('Clearing cache');
         shell_exec('php artisan view:clear && php artisan config:clear');
 
+        $this->updateProgress('Migrating and Seeding Database');
         $this->info('Migrating & Seeding database');
         shell_exec('php artisan migrate --seed --force');
 
@@ -116,17 +124,27 @@ class WemXUpdate extends Command
         if (isset($SshUser) and $SshUser !== "root") {
             $this->error('
       We have detected that you are not logged in as a root user.
-      To run the auto-installer, it is recommended to login as root user.
+      To run the auto-updater, it is recommended to login as root user.
       If you are not logged in as root, some processes may fail to setup
       To login as root SSH user, please type the following command: sudo su
       and proceed to re-run the installer.
       alternatively you can contact your provider for ROOT user login for your machine.
       ');
 
-            if ($this->confirm('Stop the installer?', true)) {
-                $this->info('Installer has been cancelled.');
+            if ($this->confirm('Stop the updater?', true)) {
+                $this->info('updater has been cancelled.');
                 exit;
             }
+        }
+    }
+
+    protected function updateProgress(string $progress): void
+    {
+        $app_updating = Cache::get('app_updating');
+
+        if ($app_updating) {
+            $app_updating['progress'] = $progress;
+            Cache::put('app_updating', $app_updating, 120);
         }
     }
 }
