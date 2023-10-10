@@ -54,7 +54,7 @@ class WemXUpdate extends Command
 
         if (!$response->successful()) {
             if (isset($response['success']) and !$response['success']) {
-                $this->updateProgress('Update Failed:'. $response['message'], 3);
+                $this->updateProgress('Update Failed: '. $response['message'], 3);
                 return $this->error($response['message']);
             }
             
@@ -141,7 +141,7 @@ class WemXUpdate extends Command
         }
     }
 
-    protected function updateProgress(string $progress, int $lifetime = 360): void
+    protected function updateProgress(string $progress, int $lifetime = 120): void
     {
         $app_updating = Cache::get('app_updating');
 
