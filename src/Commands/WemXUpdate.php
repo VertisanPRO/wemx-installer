@@ -87,7 +87,7 @@ class WemXUpdate extends Command
         shell_exec('php artisan migrate --seed --force');
 
         $this->info('Updating webserver permissions');
-        shell_exec('chown -R www-data:www-data '. base_path('/').'*');
+        shell_exec('chown -R www-data:www-data '. base_path('/*'));
 
         $this->info('Update Complete');
     }
