@@ -74,8 +74,8 @@ class WemXUpdate extends Command
         shell_exec('chmod -R 755 storage/* bootstrap/cache');
 
         $this->info('Updating composer dependencies');
-        shell_exec('composer update');
-        shell_exec('composer install --optimize-autoloader');
+        shell_exec('composer update -n');
+        shell_exec('composer install --optimize-autoloader -n');
 
         $this->info('Enabling modules');
         shell_exec('php artisan module:enable');
