@@ -37,6 +37,10 @@ class WemXUpdate extends Command
 
         $this->sshUser();
 
+        $this->updateProgress('Updating WemX installer package');
+        $this->info('Updating WemX installer');
+        shell_exec('composer require wemx/installer dev-wemxpro -n /dev/null 2>&1');
+
         $license_key = $this->argument('license_key') ?? $this->ask("Please enter your license key", settings('encrypted::license_key'));
 
         $this->info('Attempting to connect to WemX...');
