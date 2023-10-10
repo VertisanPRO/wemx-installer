@@ -5,6 +5,7 @@ namespace Wemx\Installer;
 use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\PingCommand;
 use Wemx\Installer\Commands\WemXInstaller;
+use Wemx\Installer\Commands\WemXUpdate;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,7 @@ class CommandsServiceProvider extends ServiceProvider
     {
         $this->commands([
             WemXInstaller::class,
+            WemXUpdate::class,
             PingCommand::class,
         ]);
     }
