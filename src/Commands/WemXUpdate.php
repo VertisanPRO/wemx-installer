@@ -144,7 +144,7 @@ class WemXUpdate extends Command
 
         if ($app_updating) {
             $app_updating['progress'] = $progress;
-            Cache::put('app_updating', $app_updating, 120);
+            Cache::put('app_updating', $app_updating, 300);
         }
     }
 }
