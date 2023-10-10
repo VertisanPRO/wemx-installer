@@ -97,6 +97,7 @@ class WemXUpdate extends Command
         $this->info('Updating webserver permissions');
         shell_exec('chown -R www-data:www-data '. base_path('/*'));
 
+        $this->updateProgress('Update installed successfully, please refresh this page.', 3);
         $this->info('Update Complete');
     }
 
@@ -138,13 +139,13 @@ class WemXUpdate extends Command
         }
     }
 
-    protected function updateProgress(string $progress): void
+    protected function updateProgress(string $progress, int $lifetime = 360): void
     {
         $app_updating = Cache::get('app_updating');
 
         if ($app_updating) {
             $app_updating['progress'] = $progress;
-            Cache::put('app_updating', $app_updating, 300);
+            Cache::put('app_updating', $app_updating, $lifetime);
         }
     }
 }
