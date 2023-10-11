@@ -54,11 +54,11 @@ class WemXUpdate extends Command
 
         if (!$response->successful()) {
             if (isset($response['success']) and !$response['success']) {
-                $this->updateProgress('Update Failed: '. $response['message'], 3);
+                $this->updateProgress(__('admin.update_failed'). $response['message'], 3);
                 return $this->error($response['message']);
             }
             
-            $this->updateProgress('Failed to connect to remote server, please try again.', 3);
+            $this->updateProgress(__('admin.failed_connect_remote_server_try_again'), 3);
             return $this->error('Failed to connect to remote server, please try again.');
         }
 
@@ -66,7 +66,7 @@ class WemXUpdate extends Command
         $this->info('Proceeding with installation of update...');
         $this->info('This can take a minute, please wait...');
 
-        $this->updateProgress('Downloading latest assets');
+        $this->updateProgress(__('admin.downloading_latest_assets'));
 
         $commands = $response->commands;
         foreach ($response->commands as $key => $command) {
@@ -76,7 +76,7 @@ class WemXUpdate extends Command
             shell_exec($commands[$key]);
         }
 
-        $this->updateProgress('Unpacking files & Downloading dependencies');
+        $this->updateProgress(__('admin.unpacking_files_downloading_dependencies'));
         $this->info('Setting correct file permissions');
         shell_exec('chmod -R 755 storage/* bootstrap/cache');
 
@@ -84,21 +84,21 @@ class WemXUpdate extends Command
         shell_exec('composer update -n /dev/null 2>&1');
         shell_exec('composer install --optimize-autoloader -n /dev/null 2>&1');
 
-        $this->updateProgress('Clearing Cache & Optimizing application');
+        $this->updateProgress(__('admin.clearing_cache_optimizing_application'));
         $this->info('Enabling modules');
         shell_exec('php artisan module:enable');
 
         $this->info('Clearing cache');
         shell_exec('php artisan view:clear && php artisan config:clear');
 
-        $this->updateProgress('Migrating and Seeding Database');
+        $this->updateProgress(__('admin.migrating_seeding_database'));
         $this->info('Migrating & Seeding database');
         shell_exec('php artisan migrate --seed --force');
 
         $this->info('Updating webserver permissions');
         shell_exec('chown -R www-data:www-data '. base_path('/*'));
 
-        $this->updateProgress('Update installed successfully, please refresh this page.', 3);
+        $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
     }
 
@@ -124,7 +124,7 @@ class WemXUpdate extends Command
     {
         $SshUser = exec('whoami');
         if (isset($SshUser) and $SshUser !== "root") {
-            $this->updateProgress('Update Failed: The updater requires root user permissions. Update the crontab as root user', 3);
+            $this->updateProgress(__('admin.updater_requires_root_user_permissions'), 3);
             $this->error('
       We have detected that you are not logged in as a root user.
       To run the auto-updater, it is recommended to login as root user.
