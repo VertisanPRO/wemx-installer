@@ -19,6 +19,12 @@ class CommandsServiceProvider extends ServiceProvider
             WemXUpdate::class,
             PingCommand::class,
         ]);
+
+        // register routes
+        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+
+        // register views
+        $this->loadViewsFrom(__DIR__.'/Views', 'installer');
     }
 
     /**
