@@ -20,7 +20,7 @@ class CommandsServiceProvider extends ServiceProvider
             WemXUpdate::class,
             PingCommand::class,
         ]);
-        $this->app['router']->aliasMiddleware('app.installed', CheckAppInstalled::class);
+        $this->app['router']->aliasMiddleware('app_installed', CheckAppInstalled::class);
     }
 
     /**

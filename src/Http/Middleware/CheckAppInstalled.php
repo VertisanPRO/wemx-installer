@@ -10,7 +10,7 @@ class CheckAppInstalled
     public function handle(Request $request, Closure $next)
     {
         if (!$this->isLaravelSetup()) {
-            return redirect('install');
+            return redirect('/wemx/install');
         }
         return $next($request);
     }
