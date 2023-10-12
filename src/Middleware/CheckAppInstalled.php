@@ -1,6 +1,6 @@
 <?php
 
-namespace Wemx\Installer\Http\Middleware;
+namespace Wemx\Installer\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ class CheckAppInstalled
     public function handle(Request $request, Closure $next)
     {
         if (!$this->isLaravelSetup()) {
-            return redirect('/wemx/install');
+            return redirect('/install/requirements');
         }
         return $next($request);
     }
