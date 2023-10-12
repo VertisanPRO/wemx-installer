@@ -7,9 +7,13 @@ use Illuminate\Support\Str;
 
 class InstallController 
 {
-    public function index()
+    public function requirements()
     {
         return view('installer::install');
     }
 
+    public function download()
+    {
+        return view('installer::download');   
+    }
 }
