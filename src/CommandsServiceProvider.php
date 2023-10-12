@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\PingCommand;
 use Wemx\Installer\Commands\WemXInstaller;
 use Wemx\Installer\Commands\WemXUpdate;
-use Wemx\Installer\Http\Middleware\CheckAppInstalled;
+use Wemx\Installer\Middleware\CheckAppInstalled;
 
 use Illuminate\Console\Events\Scheduling;
 use Illuminate\Console\Scheduling\Schedule;
