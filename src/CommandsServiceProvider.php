@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\PingCommand;
 use Wemx\Installer\Commands\WemXInstaller;
 use Wemx\Installer\Commands\WemXUpdate;
+use Wemx\Installer\Http\Middleware\CheckAppInstalled;
 
 class CommandsServiceProvider extends ServiceProvider
 {
@@ -25,6 +26,8 @@ class CommandsServiceProvider extends ServiceProvider
 
         // register views
         $this->loadViewsFrom(__DIR__.'/Views', 'installer');
+
+        $this->app['router']->aliasMiddleware('app.installed', CheckAppInstalled::class);
     }
 
     /**
