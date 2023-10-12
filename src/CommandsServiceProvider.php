@@ -20,7 +20,10 @@ class CommandsServiceProvider extends ServiceProvider
             WemXUpdate::class,
             PingCommand::class,
         ]);
+
         $this->app['router']->aliasMiddleware('app_installed', CheckAppInstalled::class);
+        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        $this->loadViewsFrom(__DIR__.'/Views', 'installer');
     }
 
     /**
