@@ -3,6 +3,8 @@
 namespace Wemx\Installer\Facades;
 
 use Illuminate\Support\Facades\Cache;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class CommandQueue
 {
@@ -25,11 +27,13 @@ class CommandQueue
             'arguments' => $args
         ];
         $this->update();
+        $this->log()->info('Add command: ' . $command . ' args:' . json_encode($args));
     }
 
     public function remove(int $key): void
     {
         unset($this->commands[$key]);
+        $this->log()->info('Remove command: ' . $key);
         $this->commands = array_values($this->commands);
         $this->update();
     }
@@ -37,5 +41,11 @@ class CommandQueue
     protected function update(): void
     {
         Cache::put('queue_commands', $this->commands);
+    }
+
+    public function log(): Logger
+    {
+        $log = new Logger('Queue');
+        return $log->pushHandler(new StreamHandler(storage_path('logs/queue.log')));
     }
 }
