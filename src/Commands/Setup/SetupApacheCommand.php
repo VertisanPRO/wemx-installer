@@ -52,8 +52,8 @@ class SetupApacheCommand extends Command
 
     private function installSSL(): void
     {
-        while (!file_exists("/etc/apache2/sites-available/{$this->domain}.conf")) {
-            $this->info("Waiting for /etc/apache2/sites-available/{$this->domain}.conf to be available...");
+        while (!file_exists("/etc/apache2/sites-available/wemx.conf")) {
+            $this->info("Waiting for /etc/apache2/sites-available/wemx.conf to be available...");
             sleep(5);
         }
 

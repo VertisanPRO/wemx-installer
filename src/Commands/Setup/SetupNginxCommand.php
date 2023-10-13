@@ -69,8 +69,8 @@ class SetupNginxCommand extends Command
     }
     private function installSSL(): void
     {
-        while (!file_exists("/etc/nginx/sites-available/{$this->domain}.conf")) {
-            $this->info("Waiting for /etc/nginx/sites-available/{$this->domain}.conf to be available...");
+        while (!file_exists("/etc/nginx/sites-available/wemx.conf")) {
+            $this->info("Waiting for /etc/nginx/sites-available/wemx.conf to be available...");
             sleep(5);
         }
 
