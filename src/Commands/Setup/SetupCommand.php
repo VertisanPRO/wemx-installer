@@ -65,11 +65,25 @@ class SetupCommand extends Command
             $databaseCommand->run(new ArrayInput([]), $this->output);
             $databaseSettings['DB'] = '-----------------';
             $databaseSettings = array_merge($databaseSettings, $databaseCommand->getDatabaseSettings());
-            Config::set('database.connections.mysql.host', env('DB_HOST'));
-            Config::set('database.connections.mysql.database', env('DB_DATABASE'));
-            Config::set('database.connections.mysql.username', env('DB_USERNAME'));
-            Config::set('database.connections.mysql.password', env('DB_PASSWORD'));
+            $attempts = 0;
+            $maxAttempts = 10;
+            while (Config::get('database.connections.mysql.username') != $databaseSettings['Username'] && $attempts < $maxAttempts) {
+                $this->call('config:clear');
+                Config::set('database.connections.mysql.host', env('DB_HOST'));
+                Config::set('database.connections.mysql.database', env('DB_DATABASE'));
+                Config::set('database.connections.mysql.username', env('DB_USERNAME'));
+                Config::set('database.connections.mysql.password', env('DB_PASSWORD'));
+                $this->call('config:cache');
+                sleep(1);
+                $attempts++;
+            }
+            if ($attempts == $maxAttempts) {
+                $this->error('Failed to update configuration after ' . $maxAttempts . ' attempts.');
+            }
         }
+
+
+
 
         $this->info('Configuring Crontab');
         $command = "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1";
@@ -86,14 +100,12 @@ class SetupCommand extends Command
         try {
             $this->call('module:enable', [], $this->output);
         } catch (\Exception $e) {
-            $queue->add('module:enable', []);
             $this->error($e->getMessage());
         }
 
         try {
             $this->call('migrate', ['--force' => true], $this->output);
         } catch (\Exception $e) {
-            $queue->add('migrate', ['--force' => true]);
             $this->error($e->getMessage());
         }
 
@@ -101,7 +113,6 @@ class SetupCommand extends Command
             $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true], $this->output);
             $this->info('Administrator account created successfully.');
         } catch (\Exception $e) {
-            $queue->add('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true]);
             $this->error($e->getMessage());
         }
 
@@ -112,7 +123,6 @@ class SetupCommand extends Command
 //            $this->warn('Update license');
 //            $this->call('license:update', [], $this->output);
 //        } catch (\Exception $e) {
-//            $queue->add('license:update', []);
 //            $this->error($e->getMessage());
 //        }
 
