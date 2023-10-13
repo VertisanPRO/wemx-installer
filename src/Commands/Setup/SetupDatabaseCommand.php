@@ -37,7 +37,6 @@ class SetupDatabaseCommand extends Command
                 $this->info('.env file created successfully.');
             }
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
-            sleep(5);
             Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306 ], $this->output);
         }
     }
