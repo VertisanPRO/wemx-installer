@@ -76,15 +76,20 @@ class SetupCommand extends Command
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
 //        $this->call('module:enable', [], $this->output);
-        $this->call('migrate', ['--force' => true], $this->output);
-        $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true,], $this->output);
-        $this->info('Administrator account created successfully.');
+//        $this->call('migrate', ['--force' => true], $this->output);
+//        $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true,], $this->output);
+//        $this->info('Administrator account created successfully.');
 
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
 
-        $this->warn('Update license');
-        $this->call('license:update', [], $this->output);
+        try {
+            $this->warn('Update license');
+            $this->call('license:update', [], $this->output);
+        } catch (\Exception $e){
+            $this->error($e->getMessage());
+        }
+
 
         $this->info('Configuring WebServer permission');
         passthru('composer update --ansi -n');
@@ -99,10 +104,10 @@ class SetupCommand extends Command
             'AppKey' => $key ?? '',
         ];
 
-        $admin['Administrator'] = '-----------------';
-        $admin['Name'] = $name;
-        $admin['Email'] = $email;
-        $admin['Pass'] = $password;
+//        $admin['Administrator'] = '-----------------';
+//        $admin['Name'] = $name;
+//        $admin['Email'] = $email;
+//        $admin['Pass'] = $password;
 
         $combinedData = array_merge($data, $databaseSettings ?? [], $admin);
         $keys = [];
