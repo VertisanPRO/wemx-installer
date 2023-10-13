@@ -38,8 +38,7 @@ class SetupDatabaseCommand extends Command
             }
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
             sleep(5);
-            Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--no-interaction' => true ], $this->output);
-//            shell_exec("php artisan setup:database --database={$this->database} --username={$this->username} --password={$this->password} -n");
+            Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306 ], $this->output);
         }
     }
 
