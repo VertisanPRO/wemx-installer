@@ -49,7 +49,7 @@ class SetupCommand extends Command
         }
 
         $this->info('Configuring WebServer permission');
-        Artisan::call("wemx:chown", [], $this->output);
+        shell_exec("php artisan wemx:chown");
 
         $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
         $this->info('Configuring is complete, go to the url below to continue:');
