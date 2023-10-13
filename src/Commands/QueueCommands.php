@@ -5,9 +5,6 @@ namespace Wemx\Installer\Commands;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Log;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Wemx\Installer\Facades\CommandQueue;
 
 class QueueCommands extends Command
