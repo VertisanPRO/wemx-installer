@@ -17,12 +17,12 @@ class SetupApacheCommand extends Command
     public function handle(): void
     {
         $this->info('Configuring Apache');
-        shell_exec("apt -y install apache2 libapache2-mod-php8.1");
+        shell_exec("apt -y install apache2 libapache2-mod-php8.1 python3-certbot-apache");
         $this->domain = $this->argument('domain') ?? $this->askDomain();
         $this->rootPath = $this->argument('path') ?? $this->askRootPath();
         $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
 
-        $this->apacheConfig = $this->useSSL ? $this->generateApacheSSLConfig() : $this->generateApacheConfig();
+        $this->apacheConfig = $this->generateApacheConfig();
         if ($this->saveAndLinkApacheConfig()) {
             if ($this->useSSL) {
                 $this->installSSL();
