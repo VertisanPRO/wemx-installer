@@ -3,6 +3,7 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
@@ -13,6 +14,10 @@ class SetupCommand extends Command
     protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
     protected $description = 'Setup command';
 
+    /**
+     * @throws ExceptionInterface
+     * @throws \Exception
+     */
     public function handle(): void
     {
         $this->info('Configuring WebServer');
