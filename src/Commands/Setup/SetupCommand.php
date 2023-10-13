@@ -42,7 +42,10 @@ class SetupCommand extends Command
         passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
-            $this->writeToEnvironment(['APP_KEY' => $this->call('key:generate', ['--show' => true])]);
+            $key = shell_exec('php artisan key:generate --show');
+            $this->warn('Encryption key is used to encrypt data that is stored in your database. After generating it, store it somewhere safe. You can find it in .env file under APP_KEY');
+            $this->warn($key);
+            $this->writeToEnvironment(['APP_KEY' => $key]);
         }
 
         $this->info('Database Creation');
