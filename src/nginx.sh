@@ -8,3 +8,6 @@ echo | apt-add-repository universe
 apt -y install php8.1 php8.1-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
 cd /var/www
+composer create-project laravel/laravel wemx -n
+cd wemx
+composer require wemx/installer dev-wemxpro -n
