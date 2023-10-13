@@ -66,7 +66,7 @@ class SetupCommand extends Command
         $this->info('Configuring WebServer permission');
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
-        
+
         $data = [
             'Domain' => $domain,
             'Path' => $path,
