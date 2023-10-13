@@ -83,37 +83,6 @@ class SetupApacheCommand extends Command
         $this->info('Apache configuration saved and linked successfully. Apache has been restarted.');
         return true;
     }
-    private function generateApacheSSLConfig(): string
-    {
-        return <<<EOL
-<VirtualHost *:80>
-  ServerName {$this->domain}
-
-  RewriteEngine On
-  RewriteCond %{HTTPS} !=on
-  RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R,L]
-</VirtualHost>
-
-<VirtualHost *:443>
-  ServerName {$this->domain}
-  DocumentRoot "{$this->rootPath}"
-
-  AllowEncodedSlashes On
-
-  php_value upload_max_filesize 100M
-  php_value post_max_size 100M
-
-  <Directory "{$this->rootPath}">
-    Require all granted
-    AllowOverride all
-  </Directory>
-
-  SSLEngine on
-  SSLCertificateFile /etc/letsencrypt/live/{$this->domain}/fullchain.pem
-  SSLCertificateKeyFile /etc/letsencrypt/live/{$this->domain}/privkey.pem
-</VirtualHost>
-EOL;
-    }
 
     private function generateApacheConfig(): string
     {
