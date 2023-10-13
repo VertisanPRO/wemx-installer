@@ -30,10 +30,10 @@ class SetupCommand extends Command
         }
 
 
-        passthru('cp .env.example .env');
+        shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
-            shell_exec('cp .env.example .env');
+            shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
             sleep(3);
         }
         passthru('composer install --optimize-autoloader --ansi -n');

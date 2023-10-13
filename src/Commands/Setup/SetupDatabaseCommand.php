@@ -32,7 +32,7 @@ class SetupDatabaseCommand extends Command
         $this->runCommands();
         if ($this->confirm('Save database settings in .env file?', true)) {
             if (!file_exists(base_path('.env'))) {
-                copy(base_path('.env.example'), base_path('.env'));
+                shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
                 $this->info('.env file created successfully.');
             }
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
