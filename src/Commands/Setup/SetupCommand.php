@@ -27,6 +27,8 @@ class SetupCommand extends Command
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $webserver = $this->argument('webserver') ?? null;
 
+        $license_key = $this->ask('Enter your WemX license key');
+
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
         } else {
@@ -38,14 +40,12 @@ class SetupCommand extends Command
             }
         }
 
-
         shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
             sleep(3);
         }
-        passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             $key = shell_exec('php artisan key:generate --show');
@@ -69,14 +69,25 @@ class SetupCommand extends Command
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
+        $this->info('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
+        $this->call('module:enable', [], $this->output);
+        passthru('composer install --optimize-autoloader --ansi -n');
+        $this->call('migrate', ['--force' => true], $this->output);
+        $this->call('user:create', [], $this->output);
+
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
+
+        $this->warn('Update license');
+        $this->call('license:update', [], $this->output);
 
         $this->info('Configuring WebServer permission');
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
 
         $data = [
+            'License' => $license_key,
             'Domain' => $domain,
             'Path' => $path,
             'SSL' => $ssl ? 'Enabled' : 'Disabled',
