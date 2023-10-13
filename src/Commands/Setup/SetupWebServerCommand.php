@@ -18,7 +18,8 @@ class SetupWebServerCommand extends Command
         $path = $this->argument('path') ?? $this->askRootPath();
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
 
-        if ($this->confirm('Would you like to configure Apache?', true)) {
+        $serverChoice = $this->choice('Which web server would you like to configure?', ['Apache', 'Nginx'], 1);
+        if ($serverChoice === 'Apache') {
             Artisan::call('wemx:apache', [
                 'domain' => $domain,
                 'path' => $path,
@@ -31,6 +32,7 @@ class SetupWebServerCommand extends Command
                 'ssl' => $ssl
             ]);
         }
+
     }
 
     private function askRootPath(): string
