@@ -52,6 +52,11 @@ class SetupApacheCommand extends Command
 
     private function installSSL(): void
     {
+        while (!file_exists("/etc/apache2/sites-available/{$this->domain}.conf")) {
+            $this->info("Waiting for /etc/apache2/sites-available/{$this->domain}.conf to be available...");
+            sleep(5);
+        }
+
         $this->info('Checking for Certbot and its Nginx plugin...');
         $needToInstall = shell_exec("dpkg -l | grep -E 'certbot|python3-certbot-nginx'") === null;
         if ($needToInstall) {

@@ -69,6 +69,11 @@ class SetupNginxCommand extends Command
     }
     private function installSSL(): void
     {
+        while (!file_exists("/etc/nginx/sites-available/{$this->domain}.conf")) {
+            $this->info("Waiting for /etc/nginx/sites-available/{$this->domain}.conf to be available...");
+            sleep(5);
+        }
+
         $this->info('Checking for Certbot and its Nginx plugin...');
         $needToInstall = shell_exec("dpkg -l | grep -E 'certbot|python3-certbot-nginx'") === null;
         if ($needToInstall) {
@@ -79,6 +84,7 @@ class SetupNginxCommand extends Command
         shell_exec("sudo certbot --nginx --nginx-ctl /etc/nginx/sites-available -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
+
     private function saveAndLinkNginxConfig(): bool
     {
         $configPath = "/etc/nginx/sites-available/{$this->domain}.conf";
