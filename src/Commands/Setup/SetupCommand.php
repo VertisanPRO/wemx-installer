@@ -3,6 +3,7 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Facades\CommandQueue;
@@ -64,6 +65,10 @@ class SetupCommand extends Command
             $databaseCommand->run(new ArrayInput([]), $this->output);
             $databaseSettings['DB'] = '-----------------';
             $databaseSettings = array_merge($databaseSettings, $databaseCommand->getDatabaseSettings());
+            Config::set('database.connections.mysql.host', env('DB_HOST'));
+            Config::set('database.connections.mysql.database', env('DB_DATABASE'));
+            Config::set('database.connections.mysql.username', env('DB_USERNAME'));
+            Config::set('database.connections.mysql.password', env('DB_PASSWORD'));
         }
 
         $this->info('Configuring Crontab');
