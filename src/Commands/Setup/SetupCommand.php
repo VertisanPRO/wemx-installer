@@ -3,7 +3,6 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class SetupCommand extends Command
 {
@@ -20,13 +19,13 @@ class SetupCommand extends Command
         $webserver = $this->argument('webserver') ?? null;
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
-            Artisan::call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+            $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
         } else {
             $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
             if ($serverChoice === 'Apache') {
-                Artisan::call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+                $this->call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
             } else {
-                Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+                $this->call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
             }
         }
 
@@ -40,13 +39,17 @@ class SetupCommand extends Command
         passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
-            shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
-            passthru("php artisan key:generate --force");
+            $this->call('config:clear');
+            $this->call('cache:clear');
+            $this->call('view:clear');
+            $this->call('route:clear');
+            sleep(3);
+            $this->call('key:generate', ['--force' => true], $this->output);
         }
 
         $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
-            Artisan::call("wemx:database", [], $this->output);
+            $this->call("wemx:database", [], $this->output);
         }
 
         $this->info('Configuring Crontab');
