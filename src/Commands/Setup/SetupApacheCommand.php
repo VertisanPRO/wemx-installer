@@ -64,7 +64,7 @@ class SetupApacheCommand extends Command
             shell_exec("sudo apt-get install certbot python3-certbot-nginx -y");
         }
         $this->info('Obtaining an SSL certificate...');
-        shell_exec("sudo certbot --apache --apache-ctl /etc/apache2/sites-available -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
+        shell_exec("sudo certbot --apache -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
 
