@@ -3,9 +3,12 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
+use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
 class SetupCommand extends Command
 {
+    use EnvironmentWriterTrait;
+
     protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
     protected $description = 'Setup command';
 
@@ -39,12 +42,7 @@ class SetupCommand extends Command
         passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
-            $this->call('config:clear');
-            $this->call('cache:clear');
-            $this->call('view:clear');
-            $this->call('route:clear');
-            sleep(3);
-            $this->call('key:generate', ['--force' => true], $this->output);
+            $this->writeToEnvironment(['APP_KEY' => $this->call('key:generate', ['--show' => true])]);
         }
 
         $this->info('Database Creation');
