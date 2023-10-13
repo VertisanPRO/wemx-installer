@@ -20,32 +20,19 @@ class SetupCommand extends Command
 
         $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
         if ($serverChoice === 'Apache') {
-            passthru("php artisan wemx:apache $domain $path $ssl");
+            Artisan::call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+//            passthru("php artisan wemx:apache $domain $path $ssl --ansi");
         } else {
-            passthru("php artisan wemx:nginx $domain $path $ssl");
+            Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+//            passthru("php artisan wemx:nginx $domain $path $ssl --ansi");
         }
+        shell_exec('cp .env.example .env');
 
-        $this->info('Configuring Wemx');
-        passthru('php artisan wemx:install --type=dev');
-        passthru('cp .env.example .env');
-        passthru('composer install --optimize-autoloader');
-        if ($this->confirm('Generate encryption key? (Only run this command if you are installing WemX for the first time)', true)) {
-            passthru("php artisan key:generate --force");
-        }
-
-        $this->info('Configuring Environment');
-        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
-        passthru("php artisan setup:environment --url={$url} -n");
-
-
-        $this->info('Configuring Database');
+        $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
-            passthru("php artisan wemx:database");
+            Artisan::call("wemx:database", [], $this->output);
+//            passthru("php artisan wemx:database --ansi");
         }
-
-        passthru("php artisan module:enable");
-        passthru("php artisan storage:link");
-        passthru("php artisan migrate --force");
 
         $this->info('Configuring Crontab');
         $command = "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1";
@@ -54,13 +41,14 @@ class SetupCommand extends Command
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
-        $this->info('Configuring User');
-        if ($this->confirm('Create an administrator user?', true)) {
-            passthru("php artisan user:create");
-        }
-
         $this->info('Configuring WebServer permission');
-        passthru("php artisan wemx:chown");
+        Artisan::call("wemx:chown", [], $this->output);
+//        shell_exec("php artisan wemx:chown");
+
+
+        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
+        $this->info('Configuring is complete, go to the url below to continue:');
+        $this->warn($url . '/install');
     }
 
     private function askRootPath(): string
