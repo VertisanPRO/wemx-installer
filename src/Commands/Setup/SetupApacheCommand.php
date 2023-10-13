@@ -50,7 +50,6 @@ class SetupApacheCommand extends Command
         }
         return $domain;
     }
-
     private function installSSL(): void
     {
         while (!file_exists("/etc/apache2/sites-available/{$this->domain}.conf")) {
@@ -68,7 +67,6 @@ class SetupApacheCommand extends Command
         shell_exec("sudo certbot --apache -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
-
     private function saveAndLinkApacheConfig(): bool
     {
         $configPath = "/etc/apache2/sites-available/{$this->domain}.conf";
@@ -85,7 +83,6 @@ class SetupApacheCommand extends Command
         $this->info('Apache configuration saved and linked successfully. Apache has been restarted.');
         return true;
     }
-
     private function generateApacheSSLConfig(): string
     {
         return <<<EOL

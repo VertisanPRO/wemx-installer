@@ -42,7 +42,6 @@ class SetupNginxCommand extends Command
         }
         return $rootPath;
     }
-
     private function askDomain(): string
     {
         $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
@@ -52,7 +51,6 @@ class SetupNginxCommand extends Command
         }
         return $domain;
     }
-
     private function checkPhpSocket(): void
     {
         if (!file_exists($this->phpSocket)) {
@@ -85,7 +83,6 @@ class SetupNginxCommand extends Command
         shell_exec("sudo certbot --nginx -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
-
     private function saveAndLinkNginxConfig(): bool
     {
         $configPath = "/etc/nginx/sites-available/{$this->domain}.conf";
