@@ -9,6 +9,7 @@ class SetupDatabaseCommand extends Command
     protected $signature = 'wemx:database {username?} {password?} {database?}';
     protected $description = 'Database setup command';
 
+    protected array $databaseSettings = [];
     protected ?string $username = null;
     protected ?string $password = null;
     protected ?string $database = null;
@@ -39,12 +40,17 @@ class SetupDatabaseCommand extends Command
             $this->call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306], $this->output);
         }
 
-        return [
-            'username' => $this->username,
-            'password' => $this->password,
-            'database' => $this->database,
+        $this->databaseSettings = [
+            'Username' => $this->username,
+            'Password' => $this->password,
+            'Database' => $this->database,
         ];
 
+    }
+
+    public function getDatabaseSettings(): array
+    {
+        return $this->databaseSettings;
     }
 
     private function getUserInput(): void

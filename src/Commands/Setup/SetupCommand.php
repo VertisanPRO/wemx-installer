@@ -3,6 +3,7 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
 class SetupCommand extends Command
@@ -50,7 +51,9 @@ class SetupCommand extends Command
 
         $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
-            $databaseSettings = $this->call('wemx:database', [], $this->output);
+            $databaseCommand = $this->getApplication()->find('wemx:database');
+            $databaseCommand->run(new ArrayInput([]), $this->output);
+            $databaseSettings = $databaseCommand->getDatabaseSettings();
         }
 
         $this->info('Configuring Crontab');
