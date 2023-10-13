@@ -30,6 +30,13 @@ class SetupDatabaseCommand extends Command
             }
         }
         $this->runCommands();
+        if ($this->confirm('Save database settings in .env file?', true)) {
+            if (!file_exists(base_path('.env'))) {
+                copy(base_path('.env.example'), base_path('.env'));
+                $this->info('.env file created successfully.');
+            }
+            shell_exec("php artisan setup:database --database={$this->database} --username={$this->username} --password={$this->password} -n");
+        }
     }
 
     private function getUserInput(): void
