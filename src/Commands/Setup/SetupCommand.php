@@ -49,12 +49,14 @@ class SetupCommand extends Command
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
+        passthru("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+        passthru("php artisan storage:link");
+
         $this->info('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
-
-        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
-        passthru("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+        
         $this->info('Configuring is complete, go to the url below to continue:');
+        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
         $this->warn($url . '/install');
     }
 
