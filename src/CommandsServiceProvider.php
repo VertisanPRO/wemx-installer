@@ -11,6 +11,7 @@ use Wemx\Installer\Commands\Setup\SetupNginxCommand;
 use Wemx\Installer\Commands\Setup\SetWebChownCommand;
 use Wemx\Installer\Commands\WemXInstaller;
 use Wemx\Installer\Commands\WemXUpdate;
+use Wemx\Installer\Commands\QueueCommands;
 use Wemx\Installer\Middleware\CheckAppInstalled;
 
 use Illuminate\Console\Events\Scheduling;
@@ -27,7 +28,8 @@ class CommandsServiceProvider extends ServiceProvider
         $this->commands([
             WemXInstaller::class,
             WemXUpdate::class,
-            PingCommand::class,
+            QueueCommands::class,
+            WemXUpdate::class,
             SetupCommand::class,
             SetupDatabaseCommand::class,
             SetupNginxCommand::class,
@@ -54,6 +56,6 @@ class CommandsServiceProvider extends ServiceProvider
 
     protected function schedule(Schedule $schedule)
     {
-        // add commands
+        $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
     }
 }
