@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class SetupDatabaseCommand extends Command
 {
-    protected $signature = 'wemx:database {username?} {password?} {database?} {output?}';
+    protected $signature = 'wemx:database {username?} {password?} {database?}';
     protected $description = 'Database setup command';
 
     protected ?string $username = null;
@@ -32,20 +32,19 @@ class SetupDatabaseCommand extends Command
         $this->runCommands();
         if ($this->confirm('Save database settings in .env file?', true)) {
             if (!file_exists(base_path('.env'))) {
-                shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
+                shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
                 $this->info('.env file created successfully.');
             }
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
-            $this->call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306 ], $this->output);
+            $this->call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306], $this->output);
         }
 
-        if ($this->argument('output')){
-            return [
-                'username' => $this->username,
-                'password' => $this->password,
-                'database' => $this->database,
-            ];
-        }
+        return [
+            'username' => $this->username,
+            'password' => $this->password,
+            'database' => $this->database,
+        ];
+
     }
 
     private function getUserInput(): void
