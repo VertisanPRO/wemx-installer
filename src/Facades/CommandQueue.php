@@ -45,7 +45,8 @@ class CommandQueue
 
     public function log(): Logger
     {
-        $log = new Logger('Queue');
-        return $log->pushHandler(new StreamHandler(storage_path('logs/queue.log')));
+        $log = new Logger('');
+        $log->pushHandler(new StreamHandler(storage_path('logs/queue.log')));
+        return $log;
     }
 }
