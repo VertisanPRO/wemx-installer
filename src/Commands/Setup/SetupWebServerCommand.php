@@ -24,6 +24,7 @@ class SetupWebServerCommand extends Command
         } else {
             shell_exec("php artisan wemx:nginx $domain $path $ssl");
         }
+        shell_exec("php artisan wemx:chown");
     }
 
     private function askRootPath(): string
