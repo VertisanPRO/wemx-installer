@@ -21,17 +21,21 @@ class SetupCommand extends Command
         $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
         if ($serverChoice === 'Apache') {
             Artisan::call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
-//            passthru("php artisan wemx:apache $domain $path $ssl --ansi");
         } else {
             Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
-//            passthru("php artisan wemx:nginx $domain $path $ssl --ansi");
         }
-        shell_exec('cp .env.example .env');
+        passthru('cp .env.example .env --ansi');
+        while (!file_exists(base_path('.env'))) {
+            $this->info('Waiting for .env file to be created...');
+            shell_exec('cp .env.example .env');
+            sleep(3);
+        }
+        passthru('composer install --optimize-autoloader --ansi');
+        Artisan::call('key:generate', ['--force' => true], $this->output);
 
         $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
             Artisan::call("wemx:database", [], $this->output);
-//            passthru("php artisan wemx:database --ansi");
         }
 
         $this->info('Configuring Crontab');
@@ -43,8 +47,6 @@ class SetupCommand extends Command
 
         $this->info('Configuring WebServer permission');
         Artisan::call("wemx:chown", [], $this->output);
-//        shell_exec("php artisan wemx:chown");
-
 
         $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
         $this->info('Configuring is complete, go to the url below to continue:');
