@@ -42,6 +42,7 @@ class SetupNginxCommand extends Command
         }
         return $rootPath;
     }
+
     private function askDomain(): string
     {
         $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
