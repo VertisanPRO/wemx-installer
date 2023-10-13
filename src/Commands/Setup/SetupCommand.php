@@ -33,7 +33,8 @@ class SetupCommand extends Command
         passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
-            passthru("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+            shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+            sleep(5);
             passthru("php artisan key:generate --force");
         }
 
@@ -49,12 +50,12 @@ class SetupCommand extends Command
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
-        passthru("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+        shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
 
         $this->info('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
-        
+
         $this->info('Configuring is complete, go to the url below to continue:');
         $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
         $this->warn($url . '/install');
