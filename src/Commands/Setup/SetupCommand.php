@@ -27,9 +27,9 @@ class SetupCommand extends Command
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $webserver = $this->argument('webserver') ?? null;
         $license_key = $this->ask('Enter your WemX license key');
-        $name = $this->ask('Please enter the name of the administrator');
-        $email = $this->ask('Please enter the email of the administrator');
-        $password = $this->secret('Please enter the password of the administrator');
+//        $name = $this->ask('Please enter the name of the administrator');
+//        $email = $this->ask('Please enter the email of the administrator');
+//        $password = $this->secret('Please enter the password of the administrator');
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
@@ -109,7 +109,7 @@ class SetupCommand extends Command
 //        $admin['Email'] = $email;
 //        $admin['Pass'] = $password;
 
-        $combinedData = array_merge($data, $databaseSettings ?? [], $admin);
+        $combinedData = array_merge($data, $databaseSettings ?? []);
         $keys = [];
         $values = [];
         foreach ($combinedData as $key => $value) {
