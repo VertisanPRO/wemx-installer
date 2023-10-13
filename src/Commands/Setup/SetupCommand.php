@@ -30,7 +30,7 @@ class SetupCommand extends Command
             shell_exec('cp .env.example .env');
             sleep(3);
         }
-        passthru('composer install --optimize-autoloader --ansi');
+        passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             Artisan::call('key:generate', ['--force' => true], $this->output);
