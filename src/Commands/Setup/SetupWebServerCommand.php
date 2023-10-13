@@ -20,11 +20,15 @@ class SetupWebServerCommand extends Command
 
         $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
         if ($serverChoice === 'Apache') {
-            shell_exec("php artisan wemx:apache $domain $path $ssl");
+            passthru("php artisan wemx:apache $domain $path $ssl");
         } else {
-            shell_exec("php artisan wemx:nginx $domain $path $ssl");
+            passthru("php artisan wemx:nginx $domain $path $ssl");
         }
-        shell_exec("php artisan wemx:chown");
+        passthru("php artisan wemx:chown");
+
+        if ($this->confirm('Do you want to create a new database?', true)){
+            passthru("php artisan wemx:database");
+        }
     }
 
     private function askRootPath(): string
