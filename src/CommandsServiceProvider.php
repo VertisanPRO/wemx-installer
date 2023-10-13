@@ -5,9 +5,9 @@ namespace Wemx\Installer;
 use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\PingCommand;
 use Wemx\Installer\Commands\Setup\SetupApacheCommand;
+use Wemx\Installer\Commands\Setup\SetupCommand;
 use Wemx\Installer\Commands\Setup\SetupDatabaseCommand;
 use Wemx\Installer\Commands\Setup\SetupNginxCommand;
-use Wemx\Installer\Commands\Setup\SetupWebServerCommand;
 use Wemx\Installer\Commands\Setup\SetWebChownCommand;
 use Wemx\Installer\Commands\WemXInstaller;
 use Wemx\Installer\Commands\WemXUpdate;
@@ -28,8 +28,8 @@ class CommandsServiceProvider extends ServiceProvider
             WemXInstaller::class,
             WemXUpdate::class,
             PingCommand::class,
+            SetupCommand::class,
             SetupDatabaseCommand::class,
-            SetupWebServerCommand::class,
             SetupNginxCommand::class,
             SetupApacheCommand::class,
             SetWebChownCommand::class,

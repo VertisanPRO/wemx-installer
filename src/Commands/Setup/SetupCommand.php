@@ -5,9 +5,9 @@ namespace Wemx\Installer\Commands\Setup;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class SetupWebServerCommand extends Command
+class SetupCommand extends Command
 {
-    protected $signature = 'wemx:webserver {domain?} {path?} {ssl?}';
+    protected $signature = 'wemx:setup {domain?} {path?} {ssl?}';
     protected $description = 'WebServer setup command';
 
     public function handle(): void
