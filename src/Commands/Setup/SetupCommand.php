@@ -73,9 +73,9 @@ class SetupCommand extends Command
 
         $this->info('WemX Installation');
         $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
-        passthru('composer update --ansi -n');
-        $this->call('module:enable', [], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
+        passthru('composer update --ansi -n');
+//        $this->call('module:enable', [], $this->output);
         $this->call('migrate', ['--force' => true], $this->output);
         $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true,], $this->output);
         $this->info('Administrator account created successfully.');
