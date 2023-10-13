@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 class SetupCommand extends Command
 {
     protected $signature = 'wemx:setup {domain?} {path?} {ssl?}';
-    protected $description = 'WebServer setup command';
+    protected $description = 'Setup command';
 
     public function handle(): void
     {
@@ -24,11 +24,43 @@ class SetupCommand extends Command
         } else {
             passthru("php artisan wemx:nginx $domain $path $ssl");
         }
-        passthru("php artisan wemx:chown");
 
-        if ($this->confirm('Do you want to create a new database?', true)){
+        $this->info('Configuring Wemx');
+        passthru('php artisan wemx:install');
+        passthru('cp .env.example .env');
+        passthru('composer install --optimize-autoloader');
+        if ($this->confirm('Generate encryption key? (Only run this command if you are installing WemX for the first time)', true)) {
+            passthru("php artisan key:generate --force");
+        }
+
+        $this->info('Configuring Environment');
+        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
+        passthru("php artisan setup:environment --url={$url} -n");
+
+
+        $this->info('Configuring Database');
+        if ($this->confirm('Do you want to create a new database?', true)) {
             passthru("php artisan wemx:database");
         }
+
+        passthru("php artisan module:enable");
+        passthru("php artisan storage:link");
+        passthru("php artisan migrate --force");
+
+        $this->info('Configuring Crontab');
+        $command = "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1";
+        $currentCronJobs = shell_exec('crontab -l');
+        if (!str_contains($currentCronJobs, $command)) {
+            shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
+        }
+
+        $this->info('Configuring User');
+        if ($this->confirm('Create an administrator user?', true)) {
+            passthru("php artisan user:create");
+        }
+
+        $this->info('Configuring WebServer permission');
+        passthru("php artisan wemx:chown");
     }
 
     private function askRootPath(): string
@@ -40,6 +72,7 @@ class SetupCommand extends Command
         }
         return $rootPath;
     }
+
     private function askDomain(): string
     {
         $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
