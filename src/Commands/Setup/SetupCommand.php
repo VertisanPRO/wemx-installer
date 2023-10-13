@@ -58,7 +58,8 @@ class SetupCommand extends Command
         if ($this->confirm('Do you want to create a new database?', true)) {
             $databaseCommand = $this->getApplication()->find('wemx:database');
             $databaseCommand->run(new ArrayInput([]), $this->output);
-            $databaseSettings = $databaseCommand->getDatabaseSettings();
+            $databaseSettings['Database'] = '-----------------';
+            $databaseSettings = array_merge($databaseSettings, $databaseCommand->getDatabaseSettings());
         }
 
         $this->info('Configuring Crontab');
