@@ -21,6 +21,7 @@ class SetupCommand extends Command
      */
     public function handle(): void
     {
+        $queue = new CommandQueue();
         $this->info('Configuring WebServer');
 
         $domain = $this->argument('domain') ?? $this->askDomain();
@@ -80,14 +81,14 @@ class SetupCommand extends Command
         try {
             $this->call('module:enable', [], $this->output);
         } catch (\Exception $e) {
-            $this->call('wemx:queue', ['action' => 'enqueue', '--command' => 'module:enable'], $this->output);
+            $queue->add('module:enable', []);
             $this->error($e->getMessage());
         }
 
         try {
             $this->call('migrate', ['--force' => true], $this->output);
         } catch (\Exception $e) {
-            $this->call('wemx:queue', ['action' => 'enqueue', '--command' => 'migrate', '--arguments' => '--force=true'], $this->output);
+            $queue->add('migrate', ['--force' => true]);
             $this->error($e->getMessage());
         }
 
@@ -95,7 +96,7 @@ class SetupCommand extends Command
             $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true], $this->output);
             $this->info('Administrator account created successfully.');
         } catch (\Exception $e) {
-            $this->call('wemx:queue', ['action' => 'enqueue', '--command' => 'user:create', '--arguments' => "name={$name},email={$email},password={$password},-n=true"], $this->output);
+            $queue->add('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true]);
             $this->error($e->getMessage());
         }
 
