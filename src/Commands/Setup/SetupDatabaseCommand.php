@@ -36,7 +36,8 @@ class SetupDatabaseCommand extends Command
                 copy(base_path('.env.example'), base_path('.env'));
                 $this->info('.env file created successfully.');
             }
-            passthru("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+            shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
+            sleep(5);
             Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--no-interaction' => true ], $this->output);
 //            shell_exec("php artisan setup:database --database={$this->database} --username={$this->username} --password={$this->password} -n");
         }
