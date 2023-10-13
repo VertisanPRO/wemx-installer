@@ -87,13 +87,13 @@ class SetupNginxCommand extends Command
 
     private function saveAndLinkNginxConfig(): bool
     {
-        $configPath = "/etc/nginx/sites-available/{$this->domain}.conf";
+        $configPath = "/etc/nginx/sites-available/wemx.conf";
         if (file_exists($configPath)) {
             $this->error("The configuration file {$configPath} already exists. Aborting.");
             return false;
         }
         file_put_contents($configPath, $this->nginxConfig);
-        shell_exec("sudo ln -s {$configPath} /etc/nginx/sites-enabled/{$this->domain}.conf");
+        shell_exec("sudo ln -s {$configPath} /etc/nginx/sites-enabled/wemx.conf");
         $this->info('Nginx configuration saved and linked successfully. Nginx has been restarted.');
         return true;
     }

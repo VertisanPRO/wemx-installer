@@ -70,13 +70,13 @@ class SetupApacheCommand extends Command
 
     private function saveAndLinkApacheConfig(): bool
     {
-        $configPath = "/etc/apache2/sites-available/{$this->domain}.conf";
+        $configPath = "/etc/apache2/sites-available/wemx.conf";
         if (file_exists($configPath)) {
             $this->error("The configuration file {$configPath} already exists. Aborting.");
             return false;
         }
         file_put_contents($configPath, $this->apacheConfig);
-        shell_exec("sudo ln -s /etc/apache2/sites-available/{$this->domain}.conf /etc/apache2/sites-enabled/{$this->domain}.conf");
+        shell_exec("sudo ln -s $configPath /etc/apache2/sites-enabled/wemx}.conf");
         shell_exec("sudo a2enmod rewrite");
         if ($this->useSSL) {
             shell_exec("sudo a2enmod ssl");
