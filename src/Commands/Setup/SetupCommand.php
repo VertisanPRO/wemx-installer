@@ -23,7 +23,7 @@ class SetupCommand extends Command
     public function handle(): void
     {
         $queue = new CommandQueue();
-        $this->info('Configuring WebServer');
+        $this->warn('Configuring WebServer');
 
         $domain = $this->argument('domain') ?? $this->askDomain();
         $path = $this->argument('path') ?? $this->askRootPath();
@@ -59,51 +59,35 @@ class SetupCommand extends Command
             $this->writeToEnvironment(['APP_KEY' => trim($key)]);
         }
 
-        $this->info('Database Creation');
+        $this->warn('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
             $databaseCommand = $this->getApplication()->find('wemx:database');
             $databaseCommand->run(new ArrayInput([]), $this->output);
             $databaseSettings['DB'] = '-----------------';
             $databaseSettings = array_merge($databaseSettings, $databaseCommand->getDatabaseSettings());
-            $attempts = 0;
-            $maxAttempts = 10;
-            while (Config::get('database.connections.mysql.username') != $databaseSettings['Username'] && $attempts < $maxAttempts) {
-                $this->call('config:clear');
-                Config::set('database.connections.mysql.host', env('DB_HOST'));
-                Config::set('database.connections.mysql.database', env('DB_DATABASE'));
-                Config::set('database.connections.mysql.username', env('DB_USERNAME'));
-                Config::set('database.connections.mysql.password', env('DB_PASSWORD'));
-                $this->call('config:cache');
-                sleep(1);
-                $attempts++;
-            }
-            if ($attempts == $maxAttempts) {
-                $this->error('Failed to update configuration after ' . $maxAttempts . ' attempts.');
-            }
         }
 
 
 
 
-        $this->info('Configuring Crontab');
+        $this->warn('Configuring Crontab');
         $command = "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1";
         $currentCronJobs = shell_exec('crontab -l');
         if (!str_contains($currentCronJobs, $command)) {
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
-        $this->info('WemX Installation');
+        $this->warn('WemX Installation');
         $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
 
         try {
-            $this->call('module:enable', [], $this->output);
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-        }
-
-        try {
+            $this->warn('Attempting to perform migrations');
+            Config::set('database.connections.mysql.host', '127.0.0.1');
+            Config::set('database.connections.mysql.database', $databaseSettings['Database']);
+            Config::set('database.connections.mysql.username', $databaseSettings['Username']);
+            Config::set('database.connections.mysql.password', $databaseSettings['Password']);
             $this->call('migrate', ['--force' => true], $this->output);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
@@ -119,15 +103,8 @@ class SetupCommand extends Command
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
 
-//        try {
-//            $this->warn('Update license');
-//            $this->call('license:update', [], $this->output);
-//        } catch (\Exception $e) {
-//            $this->error($e->getMessage());
-//        }
 
-
-        $this->info('Configuring WebServer permission');
+        $this->warn('Configuring WebServer permission');
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
 
