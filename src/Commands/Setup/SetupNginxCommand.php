@@ -33,23 +33,26 @@ class SetupNginxCommand extends Command
         }
     }
 
-    private function askRootPath(): void
+    private function askRootPath(): string
     {
         $defaultPath = $this->argument('path') ?? base_path('public');
-        $this->rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
-        while (!is_dir($this->rootPath)) {
+        $rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
+        while (!is_dir($rootPath)) {
             $this->error('Invalid path. Please try again.');
-            $this->rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
+            $rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
         }
+        return $rootPath;
     }
-    private function askDomain(): void
+    private function askDomain(): string
     {
-        $this->domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
-        while (!preg_match('/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', $this->domain)) {
+        $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
+        while (!preg_match('/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', $domain)) {
             $this->error('Invalid domain. Please try again.');
-            $this->domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
+            $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
         }
+        return $domain;
     }
+
     private function checkPhpSocket(): void
     {
         if (!file_exists($this->phpSocket)) {
@@ -74,7 +77,7 @@ class SetupNginxCommand extends Command
             shell_exec("sudo apt-get install certbot python3-certbot-nginx -y");
         }
         $this->info('Obtaining an SSL certificate...');
-        shell_exec("sudo certbot --nginx -d {$this->domain}");
+        shell_exec("sudo certbot --nginx -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
     private function saveAndLinkNginxConfig(): bool

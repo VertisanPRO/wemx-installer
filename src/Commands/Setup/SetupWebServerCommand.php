@@ -32,7 +32,6 @@ class SetupWebServerCommand extends Command
                 'ssl' => $ssl
             ]);
         }
-
     }
 
     private function askRootPath(): string
