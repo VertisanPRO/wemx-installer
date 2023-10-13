@@ -8,30 +8,28 @@ use Wemx\Installer\Facades\CommandQueue;
 
 class QueueCommands extends Command
 {
-    protected $description = 'Execute queuened commands from CommandQueue';
-
+    protected $description = 'Execute queued commands from CommandQueue';
     protected $signature = 'queue:commands';
 
-    /**
-     * QueueCommands constructor.
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * Handle command request to create a new user.
-     *
-     * @throws Exception
-     */
-    public function handle(CommandQueue $queue)
+    public function handle(CommandQueue $queue): void
     {
-        foreach($queue->get() as $key => $command) {
-            $this->info("Running {$command}");
-            $queue->remove($key);
-        }
+        foreach($queue->get() as $key => $commandData) {
+            $command = $commandData['command'];
+            $arguments = $commandData['arguments'];
+            $this->info("Running {$command} with arguments: " . json_encode($arguments));
 
+            try {
+                $this->call($command, $arguments);
+                $queue->remove($key);
+            } catch (Exception $e) {
+                $this->error("Failed to execute {$command}: " . $e->getMessage());
+            }
+        }
         $this->info("Queued commands completed");
     }
 }

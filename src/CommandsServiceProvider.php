@@ -21,9 +21,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 
 class CommandsServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     */
     public function boot(Dispatcher $events)
     {
         $this->commands([
@@ -43,21 +40,15 @@ class CommandsServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
         $this->loadViewsFrom(__DIR__.'/Views', 'installer');
 
-        $events->listen(Scheduling::class, function (Scheduling $event) {
-            $this->schedule($event->schedule);
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
         });
+
     }
 
-    /**
-     * Register the application services.
-     */
     public function register()
     {
 
-    }
-
-    protected function schedule(Schedule $schedule)
-    {
-        $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
     }
 }

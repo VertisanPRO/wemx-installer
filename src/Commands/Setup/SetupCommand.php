@@ -5,6 +5,7 @@ namespace Wemx\Installer\Commands\Setup;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
+use Wemx\Installer\Facades\CommandQueue;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
 class SetupCommand extends Command
@@ -20,6 +21,7 @@ class SetupCommand extends Command
      */
     public function handle(): void
     {
+        $queue = new CommandQueue();
         $this->info('Configuring WebServer');
 
         $domain = $this->argument('domain') ?? $this->askDomain();
@@ -75,8 +77,19 @@ class SetupCommand extends Command
         $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
-//        $this->call('module:enable', [], $this->output);
-//        $this->call('migrate', ['--force' => true], $this->output);
+        try {
+            $this->call('module:enable', [], $this->output);
+        } catch (\Exception $e){
+            $queue->add('module:enable', []);
+            $this->error($e->getMessage());
+        }
+        try {
+            $this->call('migrate', ['--force' => true], $this->output);
+        } catch (\Exception $e){
+            $queue->add('migrate', ['--force' => true]);
+            $this->error($e->getMessage());
+        }
+
 //        $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true,], $this->output);
 //        $this->info('Administrator account created successfully.');
 
@@ -87,6 +100,8 @@ class SetupCommand extends Command
             $this->warn('Update license');
             $this->call('license:update', [], $this->output);
         } catch (\Exception $e){
+//            $queue = new CommandQueue();
+//            $queue->add('license:update', []);
             $this->error($e->getMessage());
         }
 
