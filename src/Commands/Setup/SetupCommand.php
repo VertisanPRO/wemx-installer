@@ -69,6 +69,19 @@ class SetupCommand extends Command
 
         $this->info('Configuring is complete, go to the url below to continue:');
         $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
+
+        $data = [
+            'Domain' => $domain,
+            'Path' => $path,
+            'SSL' => $ssl ? 'Enabled' : 'Disabled',
+            'WebServer' => $webserver,
+            'AppKey' => $key,
+        ];
+
+        $headers = array_keys($data);
+        $rows = [array_values($data)];
+
+        $this->table($headers, $rows);
         $this->warn($url . '/install');
     }
 
