@@ -18,7 +18,7 @@ class SetupWebServerCommand extends Command
         $path = $this->argument('path') ?? $this->askRootPath();
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
 
-        $serverChoice = $this->choice('Which web server would you like to configure?', ['Apache', 'Nginx'], 1);
+        $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
         if ($serverChoice === 'Apache') {
             shell_exec("php artisan wemx:apache $domain $path $ssl");
         } else {
