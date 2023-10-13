@@ -8,6 +8,7 @@ apt update
 echo | apt-add-repository universe
 apt -y install php8.1 php8.1-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server apache2 libapache2-mod-php8.1 python3-certbot-apache tar unzip git
 curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+export COMPOSER_ALLOW_SUPERUSER=1
 cd /var/www
 composer create-project laravel/laravel wemx -n
 cd /var/www/wemx
