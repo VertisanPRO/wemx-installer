@@ -23,11 +23,12 @@ class SetupNginxCommand extends Command
         $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
         $this->checkPhpSocket();
 
+        if ($this->useSSL) {
+            $this->installSSL();
+        }
+
         $this->nginxConfig = $this->useSSL ? $this->generateNginxSSLConfig() : $this->generateNginxConfig();
         if ($this->saveAndLinkNginxConfig()) {
-            if ($this->useSSL) {
-                $this->installSSL();
-            }
             shell_exec("sudo systemctl restart nginx");
             $this->info('Nginx configuration is complete');
         }

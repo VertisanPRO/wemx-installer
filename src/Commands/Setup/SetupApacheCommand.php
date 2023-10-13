@@ -21,12 +21,12 @@ class SetupApacheCommand extends Command
         $this->rootPath = $this->argument('path') ?? $this->askRootPath();
         $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
 
+        if ($this->useSSL) {
+            $this->installSSL();
+        }
+
         $this->apacheConfig = $this->useSSL ? $this->generateApacheSSLConfig() : $this->generateApacheConfig();
         if ($this->saveAndLinkApacheConfig()) {
-            if ($this->useSSL) {
-                $this->installSSL();
-                shell_exec("sudo a2enmod ssl");
-            }
             shell_exec("sudo systemctl restart apache2");
             $this->info('Apache configuration is complete');
         }
@@ -75,6 +75,9 @@ class SetupApacheCommand extends Command
         file_put_contents($configPath, $this->apacheConfig);
         shell_exec("sudo ln -s /etc/apache2/sites-available/{$this->domain}.conf /etc/apache2/sites-enabled/{$this->domain}.conf");
         shell_exec("sudo a2enmod rewrite");
+        if ($this->useSSL) {
+            shell_exec("sudo a2enmod ssl");
+        }
         $this->info('Apache configuration saved and linked successfully. Apache has been restarted.');
         return true;
     }
