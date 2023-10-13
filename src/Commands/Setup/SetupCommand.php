@@ -66,22 +66,28 @@ class SetupCommand extends Command
         $this->info('Configuring WebServer permission');
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
-
-        $this->info('Configuring is complete, go to the url below to continue:');
-        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
-
+        
         $data = [
             'Domain' => $domain,
             'Path' => $path,
             'SSL' => $ssl ? 'Enabled' : 'Disabled',
             'WebServer' => $webserver,
-            'AppKey' => $key,
+            'AppKey' => $key ?? '',
         ];
 
-        $headers = array_keys($data);
-        $rows = [array_values($data)];
+        $combinedData = array_merge($data, $databaseSettings ?? []);
+        $keys = [];
+        $values = [];
+        foreach ($combinedData as $key => $value) {
+            $keys[] = $key;
+            $values[] = $value;
+        }
 
-        $this->table($headers, $rows);
+        $rows = array_map(null, $keys, $values);
+        $this->table(['Key', 'Value'], $rows);
+
+        $this->info('Configuring is complete, go to the url below to continue:');
+        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
         $this->warn($url . '/install');
     }
 
