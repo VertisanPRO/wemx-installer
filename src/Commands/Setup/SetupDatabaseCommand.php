@@ -36,7 +36,7 @@ class SetupDatabaseCommand extends Command
                 copy(base_path('.env.example'), base_path('.env'));
                 $this->info('.env file created successfully.');
             }
-            Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '-n' => true ], $this->output);
+            Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--no-interaction' => true ], $this->output);
 //            shell_exec("php artisan setup:database --database={$this->database} --username={$this->username} --password={$this->password} -n");
         }
     }
