@@ -14,5 +14,5 @@ composer create-project laravel/laravel wemx -n
 cd /var/www/wemx
 composer require wemx/installer dev-wemxpro -n
 cd /var/www/wemx
-php artisan wemx:setup
+php artisan wemx:setup apache
 #echo -e "\e[32mPreparation is complete, to continue execute the command: \e[34mphp artisan wemx:setup\e[32m\e[0m"
