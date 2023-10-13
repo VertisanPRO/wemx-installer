@@ -42,7 +42,7 @@ class CommandsServiceProvider extends ServiceProvider
 
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
-            $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
+            $schedule->command('wemx:queue process')->everyFiveSeconds()->withoutOverlapping();
         });
 
     }
