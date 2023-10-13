@@ -29,9 +29,9 @@ class SetupCommand extends Command
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $webserver = $this->argument('webserver') ?? null;
         $license_key = $this->ask('Enter your WemX license key');
-//        $name = $this->ask('Please enter the name of the administrator');
-//        $email = $this->ask('Please enter the email of the administrator');
-//        $password = $this->secret('Please enter the password of the administrator');
+        $name = $this->ask('Please enter the name of the administrator');
+        $email = $this->ask('Please enter the email of the administrator');
+        $password = $this->secret('Please enter the password of the administrator');
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
@@ -44,10 +44,10 @@ class SetupCommand extends Command
             }
         }
 
-        shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
+        shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
-            shell_exec('curl -o '.base_path('.env').' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
+            shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
             sleep(3);
         }
 
@@ -77,33 +77,39 @@ class SetupCommand extends Command
         $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
+
         try {
             $this->call('module:enable', [], $this->output);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $queue->add('module:enable', []);
             $this->error($e->getMessage());
         }
+
         try {
             $this->call('migrate', ['--force' => true], $this->output);
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $queue->add('migrate', ['--force' => true]);
             $this->error($e->getMessage());
         }
 
-//        $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true,], $this->output);
-//        $this->info('Administrator account created successfully.');
+        try {
+            $this->call('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true], $this->output);
+            $this->info('Administrator account created successfully.');
+        } catch (\Exception $e) {
+            $queue->add('user:create', ['name' => $name, 'email' => $email, 'password' => $password, '-n' => true]);
+            $this->error($e->getMessage());
+        }
 
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
 
-        try {
-            $this->warn('Update license');
-            $this->call('license:update', [], $this->output);
-        } catch (\Exception $e){
-//            $queue = new CommandQueue();
+//        try {
+//            $this->warn('Update license');
+//            $this->call('license:update', [], $this->output);
+//        } catch (\Exception $e) {
 //            $queue->add('license:update', []);
-            $this->error($e->getMessage());
-        }
+//            $this->error($e->getMessage());
+//        }
 
 
         $this->info('Configuring WebServer permission');
@@ -119,12 +125,12 @@ class SetupCommand extends Command
             'AppKey' => $key ?? '',
         ];
 
-//        $admin['Administrator'] = '-----------------';
-//        $admin['Name'] = $name;
-//        $admin['Email'] = $email;
-//        $admin['Pass'] = $password;
+        $admin['Administrator'] = '-----------------';
+        $admin['Name'] = $name;
+        $admin['Email'] = $email;
+        $admin['Pass'] = $password;
 
-        $combinedData = array_merge($data, $databaseSettings ?? []);
+        $combinedData = array_merge($data, $databaseSettings ?? [], $admin);
         $keys = [];
         $values = [];
         foreach ($combinedData as $key => $value) {
