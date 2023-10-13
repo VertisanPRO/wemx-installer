@@ -26,7 +26,7 @@ class SetupCommand extends Command
         }
 
         $this->info('Configuring Wemx');
-        passthru('php artisan wemx:install');
+        passthru('php artisan wemx:install --type=dev');
         passthru('cp .env.example .env');
         passthru('composer install --optimize-autoloader');
         if ($this->confirm('Generate encryption key? (Only run this command if you are installing WemX for the first time)', true)) {
