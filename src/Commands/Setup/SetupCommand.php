@@ -31,7 +31,10 @@ class SetupCommand extends Command
             sleep(3);
         }
         passthru('composer install --optimize-autoloader --ansi');
-        Artisan::call('key:generate', ['--force' => true], $this->output);
+
+        if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
+            Artisan::call('key:generate', ['--force' => true], $this->output);
+        }
 
         $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {

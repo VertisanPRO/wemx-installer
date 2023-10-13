@@ -3,6 +3,7 @@
 namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class SetupDatabaseCommand extends Command
 {
@@ -30,6 +31,14 @@ class SetupDatabaseCommand extends Command
             }
         }
         $this->runCommands();
+        if ($this->confirm('Save database settings in .env file?', true)) {
+            if (!file_exists(base_path('.env'))) {
+                copy(base_path('.env.example'), base_path('.env'));
+                $this->info('.env file created successfully.');
+            }
+            Artisan::call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '-n' => true ], $this->output);
+//            shell_exec("php artisan setup:database --database={$this->database} --username={$this->username} --password={$this->password} -n");
+        }
     }
 
     private function getUserInput(): void
