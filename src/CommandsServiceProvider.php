@@ -4,6 +4,7 @@ namespace Wemx\Installer;
 
 use Illuminate\Support\ServiceProvider;
 use Wemx\Installer\Commands\PingCommand;
+use Wemx\Installer\Commands\Setup\DatabaseSettingsCommand;
 use Wemx\Installer\Commands\Setup\SetupApacheCommand;
 use Wemx\Installer\Commands\Setup\SetupCommand;
 use Wemx\Installer\Commands\Setup\SetupDatabaseCommand;
@@ -30,6 +31,7 @@ class CommandsServiceProvider extends ServiceProvider
             WemXUpdate::class,
             QueueCommands::class,
             WemXUpdate::class,
+            DatabaseSettingsCommand::class,
             SetupCommand::class,
             SetupDatabaseCommand::class,
             SetupNginxCommand::class,
