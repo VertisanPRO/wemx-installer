@@ -20,17 +20,9 @@ class SetupWebServerCommand extends Command
 
         $serverChoice = $this->choice('Which web server would you like to configure?', ['Apache', 'Nginx'], 1);
         if ($serverChoice === 'Apache') {
-            Artisan::call('wemx:apache', [
-                'domain' => $domain,
-                'path' => $path,
-                'ssl' => $ssl
-            ]);
+            shell_exec("php artisan wemx:apache $domain $path $ssl");
         } else {
-            Artisan::call('wemx:nginx', [
-                'domain' => $domain,
-                'path' => $path,
-                'ssl' => $ssl
-            ]);
+            shell_exec("php artisan wemx:nginx $domain $path $ssl");
         }
     }
 
