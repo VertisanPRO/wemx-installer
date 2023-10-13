@@ -104,6 +104,13 @@ class SetupCommand extends Command
             $this->error($e->getMessage());
         }
 
+        try {
+            $user = new \App\Models\Settings::put('encrypted::license_key', $license_key);
+            $this->info('License save successfully.');
+        } catch (\Exception $e) {
+            $this->error($e->getMessage());
+        }
+
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
 
