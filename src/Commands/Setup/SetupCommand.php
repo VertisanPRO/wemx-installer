@@ -54,6 +54,7 @@ class SetupCommand extends Command
         passthru("php artisan storage:link");
 
         $this->info('Configuring WebServer permission');
+        passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
 
         $this->info('Configuring is complete, go to the url below to continue:');
