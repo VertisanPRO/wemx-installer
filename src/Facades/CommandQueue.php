@@ -14,7 +14,7 @@ class CommandQueue
     }
 
     /**
-     * Get all quened commands
+     * Get all queued commands
      * 
      * @return array
      */
@@ -30,29 +30,29 @@ class CommandQueue
      */
     public function add(string $command): void
     {
-        array_push($this->commands, $command);
-        $this->update($this->commands);
+        $this->commands[] = $command; // Directly add to the array
+        $this->update();
     }
 
     /**
-     * Remove a command to the command queue
+     * Remove a command from the command queue
      * 
      * @return void
      */
     public function remove(int $key): void
     {
         unset($this->commands[$key]);
-        $this->update($this->commands);
+        $this->commands = array_values($this->commands); // Re-index the array
+        $this->update();
     }
 
     /**
-     * Update commands in the array
+     * Update commands in the cache
      * 
      * @return void
      */
-    protected function update(array $commands): void
+    protected function update(): void
     {
-        Cache::put('queue_commands', $commands);
+        Cache::put('queue_commands', $this->commands);
     }
-
 }
