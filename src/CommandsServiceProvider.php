@@ -8,6 +8,7 @@ use Wemx\Installer\Commands\Setup\SetupApacheCommand;
 use Wemx\Installer\Commands\Setup\SetupDatabaseCommand;
 use Wemx\Installer\Commands\Setup\SetupNginxCommand;
 use Wemx\Installer\Commands\Setup\SetupWebServerCommand;
+use Wemx\Installer\Commands\Setup\SetWebChownCommand;
 use Wemx\Installer\Commands\WemXInstaller;
 use Wemx\Installer\Commands\WemXUpdate;
 use Wemx\Installer\Middleware\CheckAppInstalled;
@@ -31,6 +32,7 @@ class CommandsServiceProvider extends ServiceProvider
             SetupWebServerCommand::class,
             SetupNginxCommand::class,
             SetupApacheCommand::class,
+            SetWebChownCommand::class,
         ]);
 
         $this->app['router']->aliasMiddleware('app_installed', CheckAppInstalled::class);

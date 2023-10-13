@@ -21,14 +21,12 @@ class SetupApacheCommand extends Command
         $this->rootPath = $this->argument('path') ?? $this->askRootPath();
         $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
 
-        if ($this->useSSL) {
-            $this->installSSL();
-        }
-
         $this->apacheConfig = $this->useSSL ? $this->generateApacheSSLConfig() : $this->generateApacheConfig();
         if ($this->saveAndLinkApacheConfig()) {
+            if ($this->useSSL) {
+                $this->installSSL();
+            }
             shell_exec("sudo systemctl restart apache2");
-            $this->info('Apache configuration is complete');
         }
     }
 
@@ -61,7 +59,7 @@ class SetupApacheCommand extends Command
             shell_exec("sudo apt-get install certbot python3-certbot-nginx -y");
         }
         $this->info('Obtaining an SSL certificate...');
-        shell_exec("sudo certbot --nginx -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
+        shell_exec("sudo certbot --apache --apache-ctl /etc/apache2/sites-available -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
 

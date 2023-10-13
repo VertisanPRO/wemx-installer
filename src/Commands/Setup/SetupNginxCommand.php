@@ -23,14 +23,12 @@ class SetupNginxCommand extends Command
         $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
         $this->checkPhpSocket();
 
-        if ($this->useSSL) {
-            $this->installSSL();
-        }
-
         $this->nginxConfig = $this->useSSL ? $this->generateNginxSSLConfig() : $this->generateNginxConfig();
         if ($this->saveAndLinkNginxConfig()) {
+            if ($this->useSSL) {
+                $this->installSSL();
+            }
             shell_exec("sudo systemctl restart nginx");
-            $this->info('Nginx configuration is complete');
         }
     }
 
@@ -78,7 +76,7 @@ class SetupNginxCommand extends Command
             shell_exec("sudo apt-get install certbot python3-certbot-nginx -y");
         }
         $this->info('Obtaining an SSL certificate...');
-        shell_exec("sudo certbot --nginx -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
+        shell_exec("sudo certbot --nginx --nginx-ctl /etc/nginx/sites-available -d {$this->domain} --email wemx@wemx.com --non-interactive --agree-tos");
         $this->info('SSL certificate installed successfully.');
     }
     private function saveAndLinkNginxConfig(): bool
@@ -141,7 +139,7 @@ server {
         fastcgi_pass unix:{$this->phpSocket};
         fastcgi_index index.php;
         include fastcgi_params;
-        fastcgi_param PHP_VALUE "upload_max_filesize = 100M \n post_max_size=100M";
+        fastcgi_param PHP_VALUE "upload_max_filesize = 100M \\n post_max_size=100M";
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param HTTP_PROXY "";
         fastcgi_intercept_errors off;
@@ -190,7 +188,7 @@ server {
         fastcgi_pass unix:{$this->phpSocket};
         fastcgi_index index.php;
         include fastcgi_params;
-        fastcgi_param PHP_VALUE "upload_max_filesize = 100M \n post_max_size=100M";
+        fastcgi_param PHP_VALUE "upload_max_filesize = 100M \\n post_max_size=100M";
         fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_param HTTP_PROXY "";
         fastcgi_intercept_errors off;
