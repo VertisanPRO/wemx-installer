@@ -5,7 +5,7 @@ namespace Wemx\Installer\Commands\Setup;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Database\DatabaseManager;
-use App\Traits\EnvironmentWriterTrait;
+use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
 class DatabaseSettingsCommand extends Command
 {
