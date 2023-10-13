@@ -34,7 +34,6 @@ class SetupCommand extends Command
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
-            sleep(5);
             passthru("php artisan key:generate --force");
         }
 
