@@ -24,7 +24,7 @@ class SetupCommand extends Command
         } else {
             Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
         }
-        passthru('cp .env.example .env --ansi');
+        passthru('cp .env.example .env');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('cp .env.example .env');
