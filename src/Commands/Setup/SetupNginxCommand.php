@@ -6,30 +6,26 @@ use Illuminate\Console\Command;
 
 class SetupNginxCommand extends Command
 {
-    protected $signature = 'wemx:nginx';
+    protected $signature = 'wemx:nginx {domain?} {path?} {ssl?}';
     protected $description = 'Nginx setup command';
 
     protected string $domain;
     protected string $phpSocket = '/run/php/php8.1-fpm.sock';
-    protected string $rootPath = '/var/www/wemx/public';
+    protected string $rootPath;
     protected string $nginxConfig;
     protected bool $useSSL = false;
 
     public function handle(): void
     {
         $this->info('Configuring Nginx');
-        $this->askDomain();
-        $this->askRootPath();
+        $this->domain = $this->argument('domain') ?? $this->askDomain();
+        $this->rootPath = $this->argument('path') ?? $this->askRootPath();
+        $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
         $this->checkPhpSocket();
 
-        if ($this->confirm('Would you like to configure SSL?', true)) {
-            $this->nginxConfig = $this->generateNginxSSLConfig();
-            $this->useSSL = true;
-        } else {
-            $this->nginxConfig = $this->generateNginxConfig();
-        }
-        if ($this->saveAndLinkNginxConfig()){
-            if ($this->useSSL){
+        $this->nginxConfig = $this->useSSL ? $this->generateNginxSSLConfig() : $this->generateNginxConfig();
+        if ($this->saveAndLinkNginxConfig()) {
+            if ($this->useSSL) {
                 $this->installSSL();
             }
             shell_exec("sudo systemctl restart nginx");
@@ -39,7 +35,7 @@ class SetupNginxCommand extends Command
 
     private function askRootPath(): void
     {
-        $defaultPath = $this->rootPath;
+        $defaultPath = $this->argument('path') ?? base_path('public');
         $this->rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
         while (!is_dir($this->rootPath)) {
             $this->error('Invalid path. Please try again.');
@@ -48,7 +44,6 @@ class SetupNginxCommand extends Command
     }
     private function askDomain(): void
     {
-        $this->newLine();
         $this->domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
         while (!preg_match('/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', $this->domain)) {
             $this->error('Invalid domain. Please try again.');

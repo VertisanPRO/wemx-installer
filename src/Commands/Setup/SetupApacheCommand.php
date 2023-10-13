@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 
 class SetupApacheCommand extends Command
 {
-    protected $signature = 'wemx:apache';
+    protected $signature = 'wemx:apache {domain?} {path?} {ssl?}';
     protected $description = 'Apache setup command';
 
     protected string $domain;
@@ -17,15 +17,11 @@ class SetupApacheCommand extends Command
     public function handle(): void
     {
         $this->info('Configuring Apache');
-        $this->askDomain();
-        $this->askRootPath();
+        $this->domain = $this->argument('domain') ?? $this->askDomain();
+        $this->rootPath = $this->argument('path') ?? $this->askRootPath();
+        $this->useSSL = $this->argument('ssl') !== null ? filter_var($this->argument('ssl'), FILTER_VALIDATE_BOOLEAN) : $this->confirm('Would you like to configure SSL?', true);
 
-        if ($this->confirm('Would you like to configure SSL?', true)) {
-            $this->apacheConfig = $this->generateApacheSSLConfig();
-            $this->useSSL = true;
-        } else {
-            $this->apacheConfig = $this->generateApacheConfig();
-        }
+        $this->apacheConfig = $this->useSSL ? $this->generateApacheSSLConfig() : $this->generateApacheConfig();
         if ($this->saveAndLinkApacheConfig()) {
             if ($this->useSSL) {
                 $this->installSSL();
@@ -38,7 +34,7 @@ class SetupApacheCommand extends Command
 
     private function askRootPath(): void
     {
-        $defaultPath = $this->rootPath;
+        $defaultPath = $this->argument('path') ?? $this->rootPath;
         $this->rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], $defaultPath);
         while (!is_dir($this->rootPath)) {
             $this->error('Invalid path. Please try again.');
