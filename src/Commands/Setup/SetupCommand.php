@@ -50,7 +50,7 @@ class SetupCommand extends Command
 
         $this->info('Database Creation');
         if ($this->confirm('Do you want to create a new database?', true)) {
-            $this->call("wemx:database", [], $this->output);
+            $databaseSettings = $this->call('wemx:database', [], $this->output);
         }
 
         $this->info('Configuring Crontab');
