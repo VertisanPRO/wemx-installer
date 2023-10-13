@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 
 class SetupDatabaseCommand extends Command
 {
-    protected $signature = 'wemx:database {username?} {password?} {database?}';
+    protected $signature = 'wemx:database {username?} {password?} {database?} {output?}';
     protected $description = 'Database setup command';
 
     protected ?string $username = null;
     protected ?string $password = null;
     protected ?string $database = null;
 
-    public function handle(): void
+    public function handle()
     {
         $this->info('Configuring Database');
 
@@ -37,6 +37,14 @@ class SetupDatabaseCommand extends Command
             }
             shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
             $this->call('setup:database', ['--database' => $this->database, '--username' => $this->username, '--password' => $this->password, '--host' => '127.0.0.1', '--port' => 3306 ], $this->output);
+        }
+
+        if ($this->argument('output')){
+            return [
+                'username' => $this->username,
+                'password' => $this->password,
+                'database' => $this->database,
+            ];
         }
     }
 
