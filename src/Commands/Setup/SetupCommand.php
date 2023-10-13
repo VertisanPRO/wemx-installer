@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class SetupCommand extends Command
 {
-    protected $signature = 'wemx:setup {domain?} {path?} {ssl?}';
+    protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
     protected $description = 'Setup command';
 
     public function handle(): void
@@ -17,13 +17,20 @@ class SetupCommand extends Command
         $domain = $this->argument('domain') ?? $this->askDomain();
         $path = $this->argument('path') ?? $this->askRootPath();
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
+        $webserver = $this->argument('webserver') ?? null;
 
-        $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
-        if ($serverChoice === 'Apache') {
-            Artisan::call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+        if ($webserver == 'apache' or $webserver == 'nginx') {
+            Artisan::call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
         } else {
-            Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+            $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
+            if ($serverChoice === 'Apache') {
+                Artisan::call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+            } else {
+                Artisan::call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
+            }
         }
+
+
         passthru('cp .env.example .env');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
