@@ -2,10 +2,10 @@
 
 namespace Wemx\Installer\Commands\Setup;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
@@ -18,7 +18,7 @@ class SetupCommand extends Command
     protected string $type = 'dev';
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(): void
     {
@@ -80,7 +80,7 @@ class SetupCommand extends Command
         try {
             $this->warn('Database migrations');
             $this->call('migrate', ['--force' => true], $this->output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
         }
 
@@ -91,7 +91,7 @@ class SetupCommand extends Command
             $user->username = $name;
             $user->save();
             $this->info('Administrator account created successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
         }
 
@@ -101,7 +101,7 @@ class SetupCommand extends Command
                 'value' => encrypt($license_key)
             ]);
             $this->info('License save successfully.');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
         }
 
