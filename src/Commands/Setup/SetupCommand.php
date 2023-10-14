@@ -4,6 +4,7 @@ namespace Wemx\Installer\Commands\Setup;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Facades\CommandQueue;
