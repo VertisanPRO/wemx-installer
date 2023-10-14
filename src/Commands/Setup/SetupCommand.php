@@ -122,23 +122,38 @@ class SetupCommand extends Command
             'AppKey' => $key ?? '',
         ];
 
-        $admin['Administrator'] = '-----------------';
         $admin['Name'] = $name;
         $admin['Email'] = $email;
         $admin['Pass'] = $password;
+        $this->displaySummaryTable($data, $database, $admin);
+        $this->info('Configuring is complete, go to the url below to continue:');
+    }
 
-        $combinedData = array_merge($data, $database, $admin);
-        $keys = [];
-        $values = [];
-        foreach ($combinedData as $key => $value) {
-            $keys[] = $key;
-            $values[] = $value;
-        }
+    private function displaySummaryTable(array $data, array $database, array $admin): void
+    {
+        $dataFormatted = [
+            'License' => $data['License'],
+            'Domain' => $data['Domain'],
+            'Path' => $data['Path'],
+            'SSL' => $data['SSL'],
+            'WebServer' => $data['WebServer'],
+            'AppKey' => $data['AppKey'] ?? '',
+            ' ' => ' ',
+            'Admin Account' => '-----------------',
+            'Name' => $admin['Name'],
+            'Email' => $admin['Email'],
+            'Pass' => $admin['Pass'],
+            ' ' => ' ',
+            'Database Data' => '-----------------',
+            'Database' => $database['Database'],
+            'Username' => $database['Username'],
+            'Password' => $database['Password'],
+        ];
 
+        $keys = array_keys($dataFormatted);
+        $values = array_values($dataFormatted);
         $rows = array_map(null, $keys, $values);
         $this->table(['Key', 'Value'], $rows);
-
-        $this->info('Configuring is complete, go to the url below to continue:');
     }
 
     private function getDatabaseSettingsFromCommand(): array
