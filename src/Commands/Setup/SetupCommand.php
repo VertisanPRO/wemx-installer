@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Wemx\Installer\Facades\CommandQueue;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
 class SetupCommand extends Command
@@ -19,12 +18,10 @@ class SetupCommand extends Command
     protected string $type = 'dev';
 
     /**
-     * @throws ExceptionInterface
      * @throws \Exception
      */
     public function handle(): void
     {
-        $queue = new CommandQueue();
         $this->warn('Configuring WebServer');
 
         $domain = $this->argument('domain') ?? $this->askDomain();
@@ -47,30 +44,25 @@ class SetupCommand extends Command
             }
         }
 
-        shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
-            sleep(3);
         }
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             $key = shell_exec('php artisan key:generate --show');
-            $this->warn('Encryption key is used to encrypt data that is stored in your database. After generating it, store it somewhere safe. You can find it in .env file under APP_KEY');
-            $this->warn($key);
             $this->writeToEnvironment(['APP_KEY' => trim($key)]);
             Config::set('app.key', $key);
         }
 
         $this->warn('Database Creation');
-        if ($this->confirm('Do you want to create a new database?', true)) {
-            $databaseCommand = $this->getApplication()->find('wemx:database');
-            $databaseCommand->run(new ArrayInput([]), $this->output);
-            $databaseSettings['DB'] = '-----------------';
-            $databaseSettings = array_merge($databaseSettings, $databaseCommand->getDatabaseSettings());
-        }
-
-
+        $database = $this->confirm('Do you want to create a new database?', true) ? $this->getDatabaseSettingsFromCommand() : $this->getDatabaseSettingsFromInput();
+        $this->call('setup:database',
+            ['--database' => $database['Database'], '--username' => $database['Username'], '--password' => $database['Password'], '--host' => '127.0.0.1', '--port' => 3306]);
+        Config::set('database.connections.mysql.host', '127.0.0.1');
+        Config::set('database.connections.mysql.database', $database['Database']);
+        Config::set('database.connections.mysql.username', $database['Username']);
+        Config::set('database.connections.mysql.password', $database['Password']);
 
 
         $this->warn('Configuring Crontab');
@@ -86,11 +78,7 @@ class SetupCommand extends Command
         passthru('composer update --ansi -n');
 
         try {
-            $this->warn('Attempting to perform migrations');
-            Config::set('database.connections.mysql.host', '127.0.0.1');
-            Config::set('database.connections.mysql.database', $databaseSettings['Database']);
-            Config::set('database.connections.mysql.username', $databaseSettings['Username']);
-            Config::set('database.connections.mysql.password', $databaseSettings['Password']);
+            $this->warn('Database migrations');
             $this->call('migrate', ['--force' => true], $this->output);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
@@ -139,7 +127,7 @@ class SetupCommand extends Command
         $admin['Email'] = $email;
         $admin['Pass'] = $password;
 
-        $combinedData = array_merge($data, $databaseSettings ?? [], $admin);
+        $combinedData = array_merge($data, $database, $admin);
         $keys = [];
         $values = [];
         foreach ($combinedData as $key => $value) {
@@ -151,6 +139,24 @@ class SetupCommand extends Command
         $this->table(['Key', 'Value'], $rows);
 
         $this->info('Configuring is complete, go to the url below to continue:');
+    }
+
+    private function getDatabaseSettingsFromCommand(): array
+    {
+        $databaseCommand = $this->getApplication()->find('wemx:database');
+        $databaseCommand->run(new ArrayInput([]), $this->output);
+        return array_merge(['DB' => '-----------------'], $databaseCommand->getDatabaseSettings());
+    }
+
+    private function getDatabaseSettingsFromInput(): array
+    {
+        $this->warn('Enter the data of the existing database');
+        return [
+            'DB' => '-----------------',
+            'Database' => $this->ask('Please enter the database username'),
+            'Username' => $this->ask('Please enter the database name'),
+            'Password' => $this->ask('Please enter the database password')
+        ];
     }
 
     private function askRootPath(): string
