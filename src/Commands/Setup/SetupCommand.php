@@ -24,11 +24,7 @@ class SetupCommand extends Command
     public function handle(): void
     {
         $this->warn('Configuring WebServer');
-
-
-
-
-
+        
         $domain = $this->validateInput('ask', 'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', 'Invalid domain. Please try again.');
         $path = $this->argument('path') ?? $this->askRootPath();
 
