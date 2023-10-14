@@ -25,16 +25,28 @@ class SetupCommand extends Command
     {
         $this->warn('Configuring WebServer');
 
-        $domain = $this->validateInput('ask', 'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', 'Invalid domain. Please try again.');
-        $path = $this->argument('path') ?? $this->askRootPath();
+        $domain = $this->validateInput('ask',
+            'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/',
+            'Please enter your domain without http:// or https:// (e.g., example.com)',
+            'Invalid domain. Please try again.'
+        );
 
+        $path = $this->argument('path') ?? $this->askRootPath();
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $webserver = $this->argument('webserver') ?? null;
         $license_key = $this->ask('Enter your WemX license key');
 
         $name = $this->ask('Please enter the name of the administrator');
-        $email = $this->validateInput('ask', 'required|email', 'Invalid email. Please try again.');
-        $password = $this->validateInput('secret', 'required|min:6', 'Password must be at least 6 characters long. Please try again.');
+        $email = $this->validateInput('ask',
+            'required|email',
+            'Please enter the email of the administrator',
+            'Invalid email. Please try again.'
+        );
+        $password = $this->validateInput('secret',
+            'required|min:6',
+            'Please enter the password of the administrator',
+            'Password must be at least 6 characters long. Please try again.'
+        );
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
@@ -140,14 +152,14 @@ class SetupCommand extends Command
             'Path' => $data['Path'],
             'SSL' => $data['SSL'],
             'WebServer' => $data['WebServer'],
-            'AppKey' => $data['AppKey'] ?? '',
-            ' ' => ' ',
-            'Admin Account' => '-----------------',
+            'AppKey' => trim($data['AppKey']) ?? '',
+
+            'Admin Account' => '---------------------------------------------------',
             'Name' => $admin['Name'],
             'Email' => $admin['Email'],
             'Pass' => $admin['Pass'],
-            ' ' => ' ',
-            'Database Data' => '-----------------',
+
+            'Database Data' => '---------------------------------------------------',
             'Database' => $database['Database'],
             'Username' => $database['Username'],
             'Password' => $database['Password'],
@@ -187,11 +199,11 @@ class SetupCommand extends Command
         return $rootPath;
     }
 
-    private function validateInput(string $field, string $rule, string $errorMessage): string
+    private function validateInput(string $type, string $rule, string $ask, string $errorMessage): string
     {
         do {
-            $input = $this->$field('Please enter ' . strtolower($field));
-            $validator = Validator::make([$field => $input], [$field => $rule]);
+            $input = $this->$type($ask);
+            $validator = Validator::make([$type => $input], [$type => $rule]);
             if ($validator->fails()) {
                 $this->error($errorMessage);
             }
