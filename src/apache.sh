@@ -16,4 +16,5 @@ composer require wemx/installer dev-wemxpro -n
 cd /var/www/wemx
 php artisan wemx:setup apache
 php artisan module:enable >> /dev/null 2>&1
+php artisan module:update >> /dev/null 2>&1
 php artisan migrate --force >> /dev/null 2>&1
