@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\Console\Input\ArrayInput;
 use Wemx\Installer\Traits\EnvironmentWriterTrait;
 
@@ -24,14 +25,16 @@ class SetupCommand extends Command
     {
         $this->warn('Configuring WebServer');
 
-        $domain = $this->argument('domain') ?? $this->askDomain();
+        $domain = $this->validateDomain();
         $path = $this->argument('path') ?? $this->askRootPath();
+
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $webserver = $this->argument('webserver') ?? null;
         $license_key = $this->ask('Enter your WemX license key');
+
         $name = $this->ask('Please enter the name of the administrator');
-        $email = $this->ask('Please enter the email of the administrator');
-        $password = $this->secret('Please enter the password of the administrator');
+        $email = $this->validateEmail();
+        $password = $this->validatePassword();
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
@@ -184,14 +187,50 @@ class SetupCommand extends Command
         return $rootPath;
     }
 
-    private function askDomain(): string
+    private function validateDomain(): string
     {
-        $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
-        while (!preg_match('/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', $domain)) {
-            $this->error('Invalid domain. Please try again.');
+        do {
             $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
-        }
+            $validator = Validator::make(['domain' => $domain], [
+                'domain' => 'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/',
+            ]);
+
+            if ($validator->fails()) {
+                $this->error('Invalid domain. Please try again.');
+            }
+        } while ($validator->fails());
         return $domain;
     }
+
+    private function validateEmail(): string
+    {
+        do {
+            $email = $this->ask('Please enter the email of the administrator');
+            $validator = Validator::make(['email' => $email], [
+                'email' => 'required|email',
+            ]);
+
+            if ($validator->fails()) {
+                $this->error('Invalid email. Please try again.');
+            }
+        } while ($validator->fails());
+        return $email;
+    }
+
+    private function validatePassword(): string
+    {
+        do {
+            $password = $this->secret('Please enter the password of the administrator');
+            $validator = Validator::make(['password' => $password], [
+                'password' => 'required|min:6',
+            ]);
+
+            if ($validator->fails()) {
+                $this->error('Password must be at least 6 characters long. Please try again.');
+            }
+        } while ($validator->fails());
+        return $password;
+    }
+
 
 }
