@@ -16,6 +16,7 @@ class SetupCommand extends Command
 
     protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
     protected $description = 'Setup command';
+    protected string $type = 'dev';
 
     /**
      * @throws ExceptionInterface
@@ -80,7 +81,7 @@ class SetupCommand extends Command
         }
 
         $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $license_key, '--type' => 'dev'], $this->output);
+        $this->call('wemx:install', ['license_key' => $license_key, '--type' => $this->type], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
 
