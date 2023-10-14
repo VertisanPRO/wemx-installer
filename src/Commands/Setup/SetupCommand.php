@@ -105,7 +105,10 @@ class SetupCommand extends Command
         }
 
         try {
-            $user = new \App\Models\Settings::put('encrypted::license_key', $license_key);
+            \DB::table('settings')->insert([
+                'key' => 'encrypted::license_key',
+                'value' => encrypt($license_key)
+            ]);
             $this->info('License save successfully.');
         } catch (\Exception $e) {
             $this->error($e->getMessage());
