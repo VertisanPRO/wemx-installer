@@ -25,7 +25,11 @@ class SetupCommand extends Command
     {
         $this->warn('Configuring WebServer');
 
-        $domain = $this->validateDomain();
+
+
+
+
+        $domain = $this->validateInput('ask', 'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/', 'Invalid domain. Please try again.');
         $path = $this->argument('path') ?? $this->askRootPath();
 
         $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
@@ -33,8 +37,8 @@ class SetupCommand extends Command
         $license_key = $this->ask('Enter your WemX license key');
 
         $name = $this->ask('Please enter the name of the administrator');
-        $email = $this->validateEmail();
-        $password = $this->validatePassword();
+        $email = $this->validateInput('ask', 'required|email', 'Invalid email. Please try again.');
+        $password = $this->validateInput('secret', 'required|min:6', 'Password must be at least 6 characters long. Please try again.');
 
         if ($webserver == 'apache' or $webserver == 'nginx') {
             $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
@@ -187,50 +191,15 @@ class SetupCommand extends Command
         return $rootPath;
     }
 
-    private function validateDomain(): string
+    private function validateInput(string $field, string $rule, string $errorMessage): string
     {
         do {
-            $domain = $this->ask('Please enter your domain without http:// or https:// (e.g., example.com)');
-            $validator = Validator::make(['domain' => $domain], [
-                'domain' => 'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/',
-            ]);
-
+            $input = $this->$field('Please enter ' . strtolower($field));
+            $validator = Validator::make([$field => $input], [$field => $rule]);
             if ($validator->fails()) {
-                $this->error('Invalid domain. Please try again.');
+                $this->error($errorMessage);
             }
         } while ($validator->fails());
-        return $domain;
+        return $input;
     }
-
-    private function validateEmail(): string
-    {
-        do {
-            $email = $this->ask('Please enter the email of the administrator');
-            $validator = Validator::make(['email' => $email], [
-                'email' => 'required|email',
-            ]);
-
-            if ($validator->fails()) {
-                $this->error('Invalid email. Please try again.');
-            }
-        } while ($validator->fails());
-        return $email;
-    }
-
-    private function validatePassword(): string
-    {
-        do {
-            $password = $this->secret('Please enter the password of the administrator');
-            $validator = Validator::make(['password' => $password], [
-                'password' => 'required|min:6',
-            ]);
-
-            if ($validator->fails()) {
-                $this->error('Password must be at least 6 characters long. Please try again.');
-            }
-        } while ($validator->fails());
-        return $password;
-    }
-
-
 }
