@@ -150,8 +150,6 @@ class SetupCommand extends Command
         $this->table(['Key', 'Value'], $rows);
 
         $this->info('Configuring is complete, go to the url below to continue:');
-        $url = $ssl ? 'https://' . rtrim($domain, '/') : 'http://' . rtrim($domain, '/');
-        $this->warn($url . '/install');
     }
 
     private function askRootPath(): string
