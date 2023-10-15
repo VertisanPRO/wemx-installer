@@ -74,6 +74,11 @@ class SetupCommand extends Command
             Config::set('app.key', $key);
         }
 
+        $this->writeToEnvironment(['APP_URL' => $ssl ? 'https://' . $domain : 'http://' . $domain]);
+        if ($this->type == 'dev'){
+            $this->writeToEnvironment(['APP_DEBUG' => true]);
+        }
+
         $this->warn('Database Creation');
         $database = $this->confirm('Do you want to create a new database?', true) ? $this->getDatabaseSettingsFromCommand() : $this->getDatabaseSettingsFromInput();
         $this->call('setup:database',
