@@ -16,7 +16,18 @@ class SetupCommand extends Command
 
     protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
     protected $description = 'Setup command';
+
+    protected string $domain;
+    protected string $path;
+    protected bool $ssl = false;
     protected string $type = 'dev';
+    protected string $webserver;
+    protected string $license_key;
+    protected string $app_key = '';
+
+    protected string $username;
+    protected string $email;
+    protected string $password;
 
     /**
      * @throws Exception
@@ -25,42 +36,32 @@ class SetupCommand extends Command
     {
         $this->warn('Configuring WebServer');
 
-        $domain = $this->validateInput('ask',
+        $this->domain = $this->validateInput('ask',
             'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/',
             'Please enter your domain without http:// or https:// (e.g., example.com)',
             'Invalid domain. Please try again.'
         );
+        $this->path = $this->argument('path') ?? $this->askRootPath();
+        $this->ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
+        $this->webserver = $this->argument('webserver') ?? null;
+        $this->license_key = $this->ask('Enter your WemX license key');
 
-        $path = $this->argument('path') ?? $this->askRootPath();
-        $ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
-        $webserver = $this->argument('webserver') ?? null;
-        $license_key = $this->ask('Enter your WemX license key');
-
-        $name = $this->ask('Please enter the name of the administrator');
-        $email = $this->validateInput('ask',
+        $this->username = $this->ask('Please enter the name of the administrator');
+        $this->email = $this->validateInput('ask',
             'required|email',
             'Please enter the email of the administrator',
             'Invalid email. Please try again.'
         );
-        $password = $this->validateInput('secret',
+        $this->password = $this->validateInput('secret',
             'required|min:6',
             'Please enter the password of the administrator',
             'Password must be at least 6 characters long. Please try again.'
         );
 
-        if ($webserver == 'apache' or $webserver == 'nginx') {
-            $this->call("wemx:{$webserver}", ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
-        } else {
-            $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
-            if ($serverChoice === 'Apache') {
-                $this->call('wemx:apache', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
-            } else {
-                $this->call('wemx:nginx', ['domain' => $domain, 'path' => $path, 'ssl' => $ssl], $this->output);
-            }
-        }
+        $this->setupWebServer();
 
         $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $license_key, '--type' => $this->type], $this->output);
+        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('cp .env.example .env');
@@ -69,15 +70,10 @@ class SetupCommand extends Command
         passthru('composer update --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
-            $key = shell_exec('php artisan key:generate --show');
-            $this->writeToEnvironment(['APP_KEY' => trim($key)]);
-            Config::set('app.key', $key);
+            $this->app_key = shell_exec('php artisan key:generate --show');
+            Config::set('app.key', $this->app_key);
         }
-
-        $this->writeToEnvironment(['APP_URL' => $ssl ? 'https://' . $domain : 'http://' . $domain]);
-        if ($this->type == 'dev'){
-            $this->writeToEnvironment(['APP_DEBUG' => true]);
-        }
+        $this->setupEnv();
 
         $this->warn('Database Creation');
         $database = $this->confirm('Do you want to create a new database?', true) ? $this->getDatabaseSettingsFromCommand() : $this->getDatabaseSettingsFromInput();
@@ -90,7 +86,7 @@ class SetupCommand extends Command
 
 
         $this->warn('Configuring Crontab');
-        $command = "* * * * * php ".base_path()."/artisan schedule:run >> /dev/null 2>&1";
+        $command = "* * * * * php " . base_path() . "/artisan schedule:run >> /dev/null 2>&1";
         $currentCronJobs = shell_exec('crontab -l');
         if (!str_contains($currentCronJobs, $command)) {
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
@@ -103,26 +99,8 @@ class SetupCommand extends Command
             $this->error($e->getMessage());
         }
 
-        try {
-            $user = new \App\Models\User();
-            $user->password = Hash::make($password);
-            $user->email = $email;
-            $user->username = $name;
-            $user->save();
-            $this->info('Administrator account created successfully.');
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
-        }
-
-        try {
-            \DB::table('settings')->insert([
-                'key' => 'encrypted::license_key',
-                'value' => encrypt($license_key)
-            ]);
-            $this->info('License save successfully.');
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
-        }
+        $this->createUser();
+        $this->saveLicense();
 
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
@@ -132,38 +110,28 @@ class SetupCommand extends Command
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
 
-        $data = [
-            'License' => $license_key,
-            'Domain' => $domain,
-            'Path' => $path,
-            'SSL' => $ssl ? 'Enabled' : 'Disabled',
-            'WebServer' => $webserver,
-            'AppKey' => $key ?? '',
-        ];
 
-        $admin['Name'] = $name;
-        $admin['Email'] = $email;
-        $admin['Pass'] = $password;
-        $this->displaySummaryTable($data, $database, $admin);
+        $this->displaySummaryTable($database);
         $this->info('Configuring is complete, go to the url below to continue:');
     }
 
-    private function displaySummaryTable(array $data, array $database, array $admin): void
+    private function displaySummaryTable(array $database): void
     {
         $dataFormatted = [
-            'License' => $data['License'],
-            'Domain' => $data['Domain'],
-            'Path' => $data['Path'],
-            'SSL' => $data['SSL'],
-            'WebServer' => $data['WebServer'],
-            'AppKey' => trim($data['AppKey']) ?? '',
+            'Info' => '----------------------------------------------------------------------',
+            'License' => $this->license_key,
+            'Domain' => $this->ssl ? 'https://' . $this->domain : 'http://' . $this->domain,
+            'Path' => $this->path,
+            'SSL' => $this->ssl,
+            'WebServer' => ucfirst($this->webserver),
+            'AppKey' => trim($this->app_key),
 
-            'Admin Account' => '---------------------------------------------------',
-            'Name' => $admin['Name'],
-            'Email' => $admin['Email'],
-            'Pass' => $admin['Pass'],
+            'Admin Account' => '----------------------------------------------------------------------',
+            'Name' => $this->username,
+            'Email' => $this->email,
+            'Pass' => $this->password,
 
-            'Database Data' => '---------------------------------------------------',
+            'Database Data' => '----------------------------------------------------------------------',
             'Database' => $database['Database'],
             'Username' => $database['Username'],
             'Password' => $database['Password'],
@@ -201,6 +169,62 @@ class SetupCommand extends Command
             $rootPath = $this->askWithCompletion('Please enter the root path to your Laravel project or press Enter to accept the default path:', [], base_path('public'));
         }
         return $rootPath;
+    }
+
+    private function setupWebServer(): void
+    {
+        if ($this->webserver == 'apache' or $this->webserver == 'nginx') {
+            $this->call("wemx:{$this->webserver}", ['domain' => $this->domain, 'path' => $this->path, 'ssl' => $this->ssl], $this->output);
+        } else {
+            $serverChoice = $this->choice('Which web server would you like to configure?', ['Nginx', 'Apache'], 0);
+            if ($serverChoice === 'Apache') {
+                $this->call('wemx:apache', ['domain' => $this->domain, 'path' => $this->path, 'ssl' => $this->ssl], $this->output);
+            } else {
+                $this->call('wemx:nginx', ['domain' => $this->domain, 'path' => $this->path, 'ssl' => $this->ssl], $this->output);
+            }
+        }
+    }
+
+    private function createUser(): void
+    {
+        try {
+            $user = new \App\Models\User();
+            $user->password = Hash::make($this->password);
+            $user->email = $this->email;
+            $user->username = $this->name;
+            $user->save();
+            $this->info('Administrator account created successfully.');
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+    }
+
+    private function saveLicense(): void
+    {
+        try {
+            \DB::table('settings')->insert([
+                'key' => 'encrypted::license_key',
+                'value' => encrypt($this->license_key)
+            ]);
+            $this->info('License save successfully.');
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function setupEnv(): void
+    {
+        $this->writeToEnvironment([
+            'APP_NAME' => 'WemX',
+            'APP_ENV' => 'production',
+            'APP_KEY' => trim($this->app_key),
+            'APP_URL' => $this->ssl ? 'https://' . $this->domain : 'http://' . $this->domain,
+            'APP_DEBUG' => $this->type == 'dev',
+            'LARAVEL_CLOUDFLARE_ENABLED' => false
+        ]);
     }
 
     private function validateInput(string $type, string $rule, string $ask, string $errorMessage): string
