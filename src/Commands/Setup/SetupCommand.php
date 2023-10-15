@@ -90,7 +90,7 @@ class SetupCommand extends Command
 
 
         $this->warn('Configuring Crontab');
-        $command = "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1";
+        $command = "* * * * * php ".base_path()."/artisan schedule:run >> /dev/null 2>&1";
         $currentCronJobs = shell_exec('crontab -l');
         if (!str_contains($currentCronJobs, $command)) {
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
