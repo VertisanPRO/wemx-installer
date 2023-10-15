@@ -14,7 +14,7 @@ class SetupCommand extends Command
 {
     use EnvironmentWriterTrait;
 
-    protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?} {--type=stable : stable/dev}';
+    protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?} {--type= : The type of setup (dev or stable)}';
     protected $description = 'Setup command';
 
     protected string $domain;
