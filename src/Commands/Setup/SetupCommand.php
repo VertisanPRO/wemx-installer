@@ -108,7 +108,6 @@ class SetupCommand extends Command
     private function displaySummaryTable(): void
     {
         $dataFormatted = [
-            'Info' => '----------------------------------------------------------------------',
             'License' => $this->license_key,
             'Domain' => $this->ssl ? 'https://' . $this->domain : 'http://' . $this->domain,
             'Path' => $this->path,
