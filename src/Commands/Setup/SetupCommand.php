@@ -14,13 +14,13 @@ class SetupCommand extends Command
 {
     use EnvironmentWriterTrait;
 
-    protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?}';
+    protected $signature = 'wemx:setup {webserver?} {domain?} {path?} {ssl?} {--type?}';
     protected $description = 'Setup command';
 
     protected string $domain;
     protected string $path;
     protected bool $ssl = false;
-    protected string $type = 'dev';
+    protected string $type = 'stable';
     protected string $webserver;
     protected string $license_key;
     protected string $app_key = '';
@@ -43,6 +43,7 @@ class SetupCommand extends Command
         );
         $this->path = $this->argument('path') ?? $this->askRootPath();
         $this->ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
+        $this->type = $this->option('type') ?? 'stable';
         $this->webserver = $this->argument('webserver') ?? null;
         $this->license_key = $this->ask('Enter your WemX license key');
 
