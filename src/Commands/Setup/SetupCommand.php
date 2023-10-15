@@ -59,9 +59,14 @@ class SetupCommand extends Command
             }
         }
 
+        $this->warn('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $license_key, '--type' => $this->type], $this->output);
+        passthru('composer install --optimize-autoloader --ansi -n');
+        passthru('composer update --ansi -n');
+
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
-            shell_exec('curl -o ' . base_path('.env') . ' https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/.env.example');
+            shell_exec('cp .env.example .env');
         }
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
@@ -86,11 +91,6 @@ class SetupCommand extends Command
         if (!str_contains($currentCronJobs, $command)) {
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
-
-        $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $license_key, '--type' => $this->type], $this->output);
-        passthru('composer install --optimize-autoloader --ansi -n');
-        passthru('composer update --ansi -n');
 
         try {
             $this->warn('Database migrations');
