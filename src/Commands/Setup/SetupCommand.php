@@ -28,6 +28,7 @@ class SetupCommand extends Command
     protected string $username;
     protected string $email;
     protected string $password;
+    protected array $database;
 
     /**
      * @throws Exception
@@ -75,15 +76,7 @@ class SetupCommand extends Command
             Config::set('app.key', $this->app_key);
         }
         $this->setupEnv();
-
-        $this->warn('Database Creation');
-        $database = $this->confirm('Do you want to create a new database?', true) ? $this->getDatabaseSettingsFromCommand() : $this->getDatabaseSettingsFromInput();
-        $this->call('setup:database',
-            ['--database' => $database['Database'], '--username' => $database['Username'], '--password' => $database['Password'], '--host' => '127.0.0.1', '--port' => 3306]);
-        Config::set('database.connections.mysql.host', '127.0.0.1');
-        Config::set('database.connections.mysql.database', $database['Database']);
-        Config::set('database.connections.mysql.username', $database['Username']);
-        Config::set('database.connections.mysql.password', $database['Password']);
+        $this->setupDatabase();
 
 
         $this->warn('Configuring Crontab');
@@ -93,12 +86,8 @@ class SetupCommand extends Command
             shell_exec('(crontab -l; echo "' . $command . '") | crontab -');
         }
 
-        try {
-            $this->warn('Database migrations');
-            $this->call('migrate', ['--force' => true], $this->output);
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
-        }
+        $this->warn('Database migrations');
+        $this->call('migrate', ['--force' => true], $this->output);
 
         $this->createUser();
         $this->saveLicense();
@@ -112,11 +101,11 @@ class SetupCommand extends Command
         shell_exec("php artisan wemx:chown");
 
 
-        $this->displaySummaryTable($database);
+        $this->displaySummaryTable();
         $this->info('Configuring is complete, go to the url below to continue:');
     }
 
-    private function displaySummaryTable(array $database): void
+    private function displaySummaryTable(): void
     {
         $dataFormatted = [
             'Info' => '----------------------------------------------------------------------',
@@ -133,9 +122,9 @@ class SetupCommand extends Command
             'Pass' => $this->password,
 
             'Database Data' => '----------------------------------------------------------------------',
-            'Database' => $database['Database'],
-            'Username' => $database['Username'],
-            'Password' => $database['Password'],
+            'Database' => $this->database['Database'],
+            'Username' => $this->database['Username'],
+            'Password' => $this->database['Password'],
         ];
 
         $keys = array_keys($dataFormatted);
@@ -184,6 +173,23 @@ class SetupCommand extends Command
                 $this->call('wemx:nginx', ['domain' => $this->domain, 'path' => $this->path, 'ssl' => $this->ssl], $this->output);
             }
         }
+    }
+
+    private function setupDatabase(): void
+    {
+        $this->warn('Database Creation');
+        $databaseOption = $this->choice('Do you want to create a new database or use an existing one?', ['Create New', 'Use Existing'], 0);
+        $this->database = $databaseOption === 'Create New' ? $this->getDatabaseSettingsFromCommand() : $this->getDatabaseSettingsFromInput();
+        $this->call('setup:database', [
+            '--database' => $this->database['Database'],
+            '--username' => $this->database['Username'],
+            '--password' => $this->database['Password'],
+            '--host' => '127.0.0.1', '--port' => 3306]
+        );
+        Config::set('database.connections.mysql.host', '127.0.0.1');
+        Config::set('database.connections.mysql.database', $this->database['Database']);
+        Config::set('database.connections.mysql.username', $this->database['Username']);
+        Config::set('database.connections.mysql.password', $this->database['Password']);
     }
 
     private function createUser(): void
