@@ -198,7 +198,7 @@ class SetupCommand extends Command
             $user = new \App\Models\User();
             $user->password = Hash::make($this->password);
             $user->email = $this->email;
-            $user->username = $this->name;
+            $user->username = $this->username;
             $user->save();
             $this->info('Administrator account created successfully.');
         } catch (Exception $e) {

@@ -9,12 +9,14 @@ trait EnvironmentWriterTrait
      * reasonably cause environment parsing issues. Those values are then wrapped
      * in quotes before being returned.
      */
-    public function escapeEnvironmentValue(string $value): string
+    public function escapeEnvironmentValue($value): string  // змініть string на $value
     {
+        if (is_bool($value)) {
+            return $value ? 'true' : 'false';
+        }
         if (!preg_match('/^\"(.*)\"$/', $value) && preg_match('/([^\w.\-+\/])+/', $value)) {
             return sprintf('"%s"', addslashes($value));
         }
-
         return $value;
     }
 
