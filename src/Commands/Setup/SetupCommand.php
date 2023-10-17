@@ -91,17 +91,14 @@ class SetupCommand extends Command
 
         $this->createUser();
         $this->saveLicense();
-
-        shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         passthru("php artisan storage:link");
-
-
+        
         $this->warn('Configuring WebServer permission');
         passthru('composer update --ansi -n');
         shell_exec("php artisan wemx:chown");
 
-
         $this->displaySummaryTable();
+        shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         $this->info('Configuring is complete, go to the url below to continue:');
     }
 
@@ -208,10 +205,10 @@ class SetupCommand extends Command
     private function saveLicense(): void
     {
         try {
-            \DB::table('settings')->insert([
-                'key' => 'encrypted::license_key',
-                'value' => encrypt($this->license_key)
-            ]);
+            $setting = new \App\Models\Settings();
+            $setting->key = 'encrypted::license_key';
+            $setting->value = encrypt($this->license_key);
+            $setting->save();
             $this->info('License save successfully.');
         } catch (Exception $e) {
             $this->error($e->getMessage());

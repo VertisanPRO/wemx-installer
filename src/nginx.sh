@@ -18,4 +18,5 @@ php artisan wemx:setup nginx --type=dev
 php artisan module:enable >> /dev/null 2>&1
 php artisan module:update >> /dev/null 2>&1
 php artisan migrate --force >> /dev/null 2>&1
+php artisan wemx:chown >> /dev/null 2>&1
 
