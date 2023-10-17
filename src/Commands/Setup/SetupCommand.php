@@ -35,8 +35,6 @@ class SetupCommand extends Command
      */
     public function handle(): void
     {
-        $this->warn('Configuring WebServer');
-
         $this->domain = $this->validateInput('ask',
             'required|regex:/^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/',
             'Please enter your domain without http:// or https:// (e.g., example.com)',
