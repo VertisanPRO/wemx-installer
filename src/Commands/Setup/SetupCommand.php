@@ -45,7 +45,7 @@ class SetupCommand extends Command
         $this->path = $this->argument('path') ?? $this->askRootPath();
         $this->ssl = $this->argument('ssl') ?? $this->confirm('Would you like to configure SSL?', true);
         $this->type = $this->option('type') ?? 'stable';
-        $this->webserver = $this->argument('webserver') ?? null;
+        $this->webserver = $this->argument('webserver') ?? '';
         $this->license_key = $this->ask('Enter your WemX license key');
 
         $this->username = $this->ask('Please enter the name of the administrator');
@@ -60,14 +60,16 @@ class SetupCommand extends Command
             'Password must be at least 6 characters long. Please try again.'
         );
 
-        $this->setupWebServer();
-
-        $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('cp .env.example .env');
         }
+
+        $this->setupDatabase();
+        $this->setupWebServer();
+
+        $this->warn('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
 
@@ -76,8 +78,6 @@ class SetupCommand extends Command
             Config::set('app.key', $this->app_key);
         }
         $this->setupEnv();
-        $this->setupDatabase();
-
 
         $this->warn('Configuring Crontab');
         $command = "* * * * * php " . base_path() . "/artisan schedule:run >> /dev/null 2>&1";
