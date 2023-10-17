@@ -58,14 +58,14 @@ class SetupCommand extends Command
             'Password must be at least 6 characters long. Please try again.'
         );
 
-        $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
-        passthru('composer install --optimize-autoloader --ansi -n');
-
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('cp .env.example .env');
         }
+
+        $this->warn('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
+        passthru('composer install --optimize-autoloader --ansi -n');
 
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             $this->app_key = shell_exec('php artisan key:generate --show');
