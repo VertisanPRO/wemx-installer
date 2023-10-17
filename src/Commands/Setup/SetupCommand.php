@@ -75,7 +75,7 @@ class SetupCommand extends Command
         $this->warn('WemX Installation');
         $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
-        
+
         $this->warn('Configuring Crontab');
         $command = "* * * * * php " . base_path() . "/artisan schedule:run >> /dev/null 2>&1";
         $currentCronJobs = shell_exec('crontab -l');
@@ -92,8 +92,7 @@ class SetupCommand extends Command
         passthru("php artisan storage:link");
         $this->warn('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
-
-
+        
         $this->displaySummaryTable();
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
         $this->info('Configuring is complete, go to the url below to continue:');
