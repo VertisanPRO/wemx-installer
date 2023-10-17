@@ -60,6 +60,9 @@ class SetupCommand extends Command
             'Password must be at least 6 characters long. Please try again.'
         );
 
+        $this->warn('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
+
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
             shell_exec('cp .env.example .env');
@@ -70,14 +73,10 @@ class SetupCommand extends Command
             Config::set('app.key', $this->app_key);
         }
 
+        $this->setupWebServer();
         $this->setupDatabase();
         $this->setupEnv();
-        $this->setupWebServer();
 
-        $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
-        passthru('composer install --optimize-autoloader --ansi -n');
-        passthru('composer update --ansi -n');
 
         $this->warn('Configuring Crontab');
         $command = "* * * * * php " . base_path() . "/artisan schedule:run >> /dev/null 2>&1";
@@ -91,11 +90,13 @@ class SetupCommand extends Command
 
         $this->createUser();
         $this->saveLicense();
+
         passthru("php artisan storage:link");
-        
-        $this->warn('Configuring WebServer permission');
+        passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
+        $this->warn('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
+
 
         $this->displaySummaryTable();
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
@@ -205,10 +206,10 @@ class SetupCommand extends Command
     private function saveLicense(): void
     {
         try {
-            $setting = new \App\Models\Settings();
-            $setting->key = 'encrypted::license_key';
-            $setting->value = encrypt($this->license_key);
-            $setting->save();
+            \DB::table('settings')->insert([
+                'key' => 'encrypted::license_key',
+                'value' => encrypt($this->license_key)
+            ]);
             $this->info('License save successfully.');
         } catch (Exception $e) {
             $this->error($e->getMessage());
