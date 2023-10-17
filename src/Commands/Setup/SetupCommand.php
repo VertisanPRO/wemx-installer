@@ -60,6 +60,8 @@ class SetupCommand extends Command
 
         $this->warn('WemX Installation');
         $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
+        passthru('composer install --optimize-autoloader --ansi -n');
+        passthru('composer update --ansi -n');
 
         while (!file_exists(base_path('.env'))) {
             $this->info('Waiting for .env file to be created...');
