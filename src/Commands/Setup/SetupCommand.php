@@ -68,9 +68,9 @@ class SetupCommand extends Command
             Config::set('app.key', $this->app_key);
         }
 
-        $this->setupWebServer();
         $this->setupDatabase();
-
+        $this->setupWebServer();
+        
         $this->warn('WemX Installation');
         $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
         passthru('composer install --optimize-autoloader --ansi -n');
