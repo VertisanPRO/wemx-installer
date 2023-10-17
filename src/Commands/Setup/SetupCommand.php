@@ -63,10 +63,6 @@ class SetupCommand extends Command
             shell_exec('cp .env.example .env');
         }
 
-        $this->warn('WemX Installation');
-        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
-        passthru('composer install --optimize-autoloader --ansi -n');
-
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             $this->app_key = shell_exec('php artisan key:generate --show');
             Config::set('app.key', $this->app_key);
@@ -76,7 +72,10 @@ class SetupCommand extends Command
         $this->setupDatabase();
         $this->setupEnv();
 
-
+        $this->warn('WemX Installation');
+        $this->call('wemx:install', ['license_key' => $this->license_key, '--type' => $this->type], $this->output);
+        passthru('composer install --optimize-autoloader --ansi -n');
+        
         $this->warn('Configuring Crontab');
         $command = "* * * * * php " . base_path() . "/artisan schedule:run >> /dev/null 2>&1";
         $currentCronJobs = shell_exec('crontab -l');
