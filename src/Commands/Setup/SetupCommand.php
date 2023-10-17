@@ -65,11 +65,12 @@ class SetupCommand extends Command
             shell_exec('cp .env.example .env');
         }
 
-        $this->setupDatabase();
         if ($this->confirm('Setup encryption key. (Only run this command if you are installing WemX for the first time)', true)) {
             $this->app_key = shell_exec('php artisan key:generate --show');
             Config::set('app.key', $this->app_key);
         }
+
+        $this->setupDatabase();
         $this->setupEnv();
         $this->setupWebServer();
 
