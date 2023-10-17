@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# source  <(curl -s https://raw.githubusercontent.com/VertisanPRO/wemx-installer/wemxpro/src/nginx.sh)
+# source  <(curl -s https://raw.githubusercontent.com/VertisanPRO/wemx-installer/web/src/nginx.sh)
 apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
 LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
 curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash
