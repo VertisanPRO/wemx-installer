@@ -92,7 +92,6 @@ class SetupCommand extends Command
         $this->saveLicense();
 
         passthru("php artisan storage:link");
-        passthru('composer install --optimize-autoloader --ansi -n');
         passthru('composer update --ansi -n');
         $this->warn('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
