@@ -88,6 +88,10 @@ class WemXUpdate extends Command
         $this->info('Enabling modules');
         shell_exec('php artisan module:enable');
 
+        $this->updateProgress(__('admin.updating_module_dependencies'));
+        $this->info('Updating Module dependencies');
+        shell_exec('php artisan module:update');
+
         $this->info('Clearing cache');
         shell_exec('php artisan view:clear && php artisan config:clear');
 
