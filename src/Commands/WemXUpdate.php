@@ -6,10 +6,12 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Artisan;
+use App\Traits\EnvironmentWriterTrait;
 
 class WemXUpdate extends Command
 {
+    use EnvironmentWriterTrait;
+
     protected $description = 'Update WemX to a specified version';
 
     protected $signature = 'wemx:update {license_key?} {--type=stable} {--ver=latest}';
@@ -104,7 +106,7 @@ class WemXUpdate extends Command
         shell_exec('chown -R www-data:www-data '. base_path('/*'));
 
         // update license
-        Artisan::call("license:update {$license_key}");
+        $this->writeToEnvironment(['LICENSE_KEY' => $license_key]);
 
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
