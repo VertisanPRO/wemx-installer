@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 
 class WemXUpdate extends Command
 {
@@ -101,6 +102,9 @@ class WemXUpdate extends Command
 
         $this->info('Updating webserver permissions');
         shell_exec('chown -R www-data:www-data '. base_path('/*'));
+
+        // update license
+        Artisan::call("license:update {$license_key}");
 
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
