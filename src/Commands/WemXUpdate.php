@@ -104,6 +104,8 @@ class WemXUpdate extends Command
 
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
+
+        $this->info('Please update your license key using php artisan license:update');
     }
 
     private function ip()
