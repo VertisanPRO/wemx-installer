@@ -99,6 +99,9 @@ class WemXUpdate extends Command
         $this->info('Updating webserver permissions');
         shell_exec('chown -R www-data:www-data '. base_path('/*'));
 
+        // update the license key
+        shell_exec('php artisan license:update '. $license_key);
+
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
     }
