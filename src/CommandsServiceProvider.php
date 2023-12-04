@@ -37,13 +37,13 @@ class CommandsServiceProvider extends ServiceProvider
         ]);
 
         $this->app['router']->aliasMiddleware('app_installed', CheckAppInstalled::class);
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
-        $this->loadViewsFrom(__DIR__.'/Views', 'installer');
+        // $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        // $this->loadViewsFrom(__DIR__.'/Views', 'installer');
 
-        $this->app->booted(function () {
-            $schedule = $this->app->make(Schedule::class);
-            $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
-        });
+        // $this->app->booted(function () {
+        //     $schedule = $this->app->make(Schedule::class);
+        //     $schedule->command('queue:commands')->everyFiveSeconds()->withoutOverlapping();
+        // });
 
     }
 
