@@ -55,11 +55,13 @@ class WemXUpdate extends Command
         if (!$response->successful()) {
             if (isset($response['success']) and !$response['success']) {
                 $this->updateProgress(__('admin.update_failed'). $response['message'], 3);
-                return $this->error($response['message']);
+                $this->error($response['message']);
+                return;
             }
             
             $this->updateProgress(__('admin.failed_connect_remote_server_try_again'), 3);
-            return $this->error('Failed to connect to remote server, please try again.');
+            $this->error('Failed to connect to remote server, please try again.');
+            return;
         }
 
         $response = $response->object();
@@ -127,7 +129,7 @@ class WemXUpdate extends Command
         return ($this->option($key)) ? $this->option($key) : $default;
     }
 
-    private function sshUser()
+    private function sshUser(): void
     {
         $SshUser = exec('whoami');
         if (isset($SshUser) and $SshUser !== "root") {
