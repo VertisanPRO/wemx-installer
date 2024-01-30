@@ -102,7 +102,7 @@ class WemXUpdate extends Command
         system('php artisan migrate --seed --force');
 
         $this->info('Updating webserver permissions');
-        system('chown -R www-data:www-data '. base_path('/*'));
+        system('php artisan wemx:chown');
 
         // update the license key
         system('php artisan license:update '. $license_key);
