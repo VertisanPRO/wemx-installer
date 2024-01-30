@@ -24,6 +24,7 @@ class CommandsServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events)
     {
         $this->commands([
+            PingCommand::class,
             WemXInstaller::class,
             WemXUpdate::class,
             QueueCommands::class,
