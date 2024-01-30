@@ -11,7 +11,7 @@ class WemXUpdate extends Command
 {
     protected $description = 'Update WemX to a specified version';
 
-    protected $signature = 'wemx:update {license_key?} {--type=stable} {--ver=latest}';
+    protected $signature = 'wemx:update {license_key?} {--type=stable} {--ver=latest} {--lang= : Specify the language}';
 
     /**
      * WemXUpdate constructor.
@@ -28,6 +28,8 @@ class WemXUpdate extends Command
      */
     public function handle()
     {
+
+        app()->setLocale($this->getOption('lang', 'en'));
         $this->info("
         ======================================
         |||     WemX™ © 2023 Updater       |||
@@ -75,35 +77,35 @@ class WemXUpdate extends Command
             for ($i = 0; $i < $response->x; $i++) {
                 $commands[$key] = base64_decode($commands[$key]);
             }
-            shell_exec($commands[$key]);
+            system($commands[$key]);
         }
 
         $this->updateProgress(__('admin.unpacking_files_downloading_dependencies'));
         $this->info('Setting correct file permissions');
-        shell_exec('chmod -R 755 storage/* bootstrap/cache');
+        system('chmod -R 755 storage/* bootstrap/cache');
 
         $this->info('Updating composer dependencies');
-        shell_exec('composer update -n /dev/null 2>&1');
-        shell_exec('composer install --optimize-autoloader -n /dev/null 2>&1');
+        system('composer update -n /dev/null 2>&1');
+        system('composer install --optimize-autoloader -n /dev/null 2>&1');
 
         $this->updateProgress(__('admin.clearing_cache_optimizing_application'));
         $this->info('Enabling modules');
-        shell_exec('php artisan module:enable');
-        shell_exec('php artisan module:update');
-        shell_exec('php artisan module:publish');
+        system('php artisan module:enable');
+        system('php artisan module:update');
+        system('php artisan module:publish');
 
         $this->info('Clearing cache');
-        shell_exec('php artisan view:clear && php artisan config:clear');
+        system('php artisan view:clear && php artisan config:clear');
 
         $this->updateProgress(__('admin.migrating_seeding_database'));
         $this->info('Migrating & Seeding database');
-        shell_exec('php artisan migrate --seed --force');
+        system('php artisan migrate --seed --force');
 
         $this->info('Updating webserver permissions');
-        shell_exec('chown -R www-data:www-data '. base_path('/*'));
+        system('chown -R www-data:www-data '. base_path('/*'));
 
         // update the license key
-        shell_exec('php artisan license:update '. $license_key);
+        system('php artisan license:update '. $license_key);
 
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
@@ -153,7 +155,6 @@ class WemXUpdate extends Command
     protected function updateProgress(string $progress, int $lifetime = 120): void
     {
         $app_updating = Cache::get('app_updating');
-
         if ($app_updating) {
             $app_updating['progress'] = $progress;
             Cache::put('app_updating', $app_updating, $lifetime);
