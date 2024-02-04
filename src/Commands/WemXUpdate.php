@@ -39,7 +39,7 @@ class WemXUpdate extends Command
 
         $this->sshUser();
 
-        $license_key = $this->argument('license_key') ?? $this->ask("Please enter your license key", settings('encrypted::license_key'));
+        $license_key = $this->argument('license_key') ?? $this->ask("Please enter your license key", config('app.license'));
 
         $this->info('Attempting to connect to WemX...');
 
