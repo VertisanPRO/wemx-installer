@@ -89,9 +89,16 @@ class WemXUpdate extends Command
         system('composer install --optimize-autoloader -n /dev/null 2>&1');
 
         $this->updateProgress(__('admin.clearing_cache_optimizing_application'));
+
         $this->info('Enabling modules');
-        system('php artisan module:enable');
+        $enabledModules = \Module::allEnabled();
+        foreach ($enabledModules as $module) {
+            system('php artisan module:disable ' . $module->getName());
+        }
         system('php artisan module:update');
+        foreach ($enabledModules as $module) {
+            system('php artisan module:enable ' . $module->getName());
+        }
         system('php artisan module:publish');
 
         $this->info('Clearing cache');
@@ -104,13 +111,11 @@ class WemXUpdate extends Command
         $this->info('Updating webserver permissions');
         system('php artisan wemx:chown');
 
-        // update the license key
+        $this->info('Updating license key');
         system('php artisan license:update '. $license_key);
 
         $this->updateProgress(__('admin.installed_successfully_please_refresh_page'), 3);
         $this->info('Update Complete');
-
-        $this->info('Please update your license key using php artisan license:update');
     }
 
     private function ip()
