@@ -95,10 +95,10 @@ class WemXUpdate extends Command
         foreach ($enabledModules as $module) {
             system('php artisan module:disable ' . $module->getName());
         }
-        system('php artisan module:update');
         foreach ($enabledModules as $module) {
             system('php artisan module:enable ' . $module->getName());
         }
+        system('php artisan module:update');
         system('php artisan module:publish');
 
         $this->info('Clearing cache');
