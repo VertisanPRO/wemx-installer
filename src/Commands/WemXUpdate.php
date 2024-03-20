@@ -110,7 +110,7 @@ class WemXUpdate extends Command
 
         $this->info('Updating webserver permissions');
         system('php artisan wemx:chown');
-        system('php artisan queue:start --force');
+        system('php artisan queue:start --force > /dev/null 2>&1');
 
         $this->info('Updating license key');
         system('php artisan license:update '. $license_key);
