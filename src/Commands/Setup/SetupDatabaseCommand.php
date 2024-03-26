@@ -48,13 +48,14 @@ class SetupDatabaseCommand extends Command
     private function runCommands(): void
     {
         $commands = [
-            "mysql -u root -e \"CREATE USER '{$this->username}'@'127.0.0.1' IDENTIFIED BY '{$this->password}';\"",
-            "mysql -u root -e \"CREATE DATABASE {$this->database};\"",
-            "mysql -u root -e \"GRANT ALL PRIVILEGES ON {$this->database}.* TO '{$this->username}'@'127.0.0.1' WITH GRANT OPTION;\"",
+            "/usr/bin/mariadb -u root -e \"CREATE USER '{$this->username}'@'127.0.0.1' IDENTIFIED BY '{$this->password}';\"",
+            "/usr/bin/mariadb -u root -e \"CREATE DATABASE {$this->database};\"",
+            "/usr/bin/mariadb -u root -e \"GRANT ALL PRIVILEGES ON {$this->database}.* TO '{$this->username}'@'127.0.0.1' WITH GRANT OPTION;\"",
         ];
         foreach ($commands as $command) {
             shell_exec($command);
         }
         $this->info('Database configuration is complete');
     }
+
 }
