@@ -183,6 +183,8 @@ class SetupCommand extends Command
         Config::set('database.connections.mysql.database', $this->database['Database']);
         Config::set('database.connections.mysql.username', $this->database['Username']);
         Config::set('database.connections.mysql.password', $this->database['Password']);
+        $this->call('config:clear');
+        $this->call('cache:clear');
     }
 
     private function createUser(): void
