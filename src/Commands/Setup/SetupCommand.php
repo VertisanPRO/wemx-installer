@@ -225,7 +225,8 @@ class SetupCommand extends Command
             'APP_KEY' => trim($this->app_key),
             'APP_URL' => $this->ssl ? 'https://' . $this->domain : 'http://' . $this->domain,
             'APP_DEBUG' => $this->type == 'dev',
-            'LARAVEL_CLOUDFLARE_ENABLED' => false
+            'LARAVEL_CLOUDFLARE_ENABLED' => false,
+            'LICENSE_KEY' => $this->license_key,
         ]);
     }
 
