@@ -92,6 +92,7 @@ class SetupCommand extends Command
         passthru("php artisan storage:link");
         $this->warn('Configuring WebServer permission');
         shell_exec("php artisan wemx:chown");
+        shell_exec('php artisan license:update' . $this->license_key);
 
         $this->displaySummaryTable();
         shell_exec("php artisan config:clear && php artisan cache:clear && php artisan view:clear && php artisan route:clear");
